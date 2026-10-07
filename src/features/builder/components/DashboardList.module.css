@@ -1,0 +1,113 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.heading {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* "Importar" e "Novo": lado a lado quando a lateral é larga; um embaixo do outro quando é estreita. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.action {
+  flex: 1 1 120px;
+  min-height: 34px;
+  font-size: 13px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Cada dashboard: a linha que abre ele e, à direita, as opções dele. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 4px;
+  border-radius: var(--radius);
+  transition: background-color 150ms ease;
+}
+
+.row:hover {
+  background: var(--surface-muted);
+}
+
+.active {
+  background: var(--surface-muted);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.item {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  text-align: left;
+  cursor: pointer;
+}
+
+.icon {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.active .icon {
+  color: var(--red);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.name {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* As opções ficam discretas e aparecem mais na linha com o mouse, a aberta ou com o foco. */
+/* Pela linha (mais específico que o botão "ghost" padrão). */
+.row .options {
+  flex: none;
+  width: 28px;
+  min-height: 28px;
+  color: var(--text-faint);
+}
+
+.row:hover .options,
+.row.active .options,
+.row .options:focus-visible,
+.row .options[aria-expanded='true'] {
+  color: var(--text);
+}

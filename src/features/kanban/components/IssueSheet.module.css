@@ -1,0 +1,391 @@
+/* Moldura da planilha: rola nos dois sentidos, com o cabeçalho preso no topo. */
+.frame {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  border-radius: inherit;
+  transition: opacity 150ms ease;
+}
+
+.refreshing .scroll {
+  opacity: 0.4;
+}
+
+/* Tabela e divisas juntas: as divisas têm a altura da tabela. */
+.canvas {
+  position: relative;
+}
+
+.table {
+  /* A largura da moldura, no mínimo a soma das colunas (o mínimo vem do componente, na `.canvas`). */
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+
+.table th,
+.table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Linhas de grade entre as células, como numa planilha. */
+.table td + td,
+.table th + th,
+.table th + td,
+.table td + th {
+  border-left: 1px solid var(--border);
+}
+
+.table thead th {
+  position: sticky;
+  overflow: visible;
+  top: 0;
+  z-index: 2;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  background: var(--surface-muted);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.sort:hover {
+  color: var(--text-strong);
+}
+
+.numeric .sort {
+  flex-direction: row-reverse;
+}
+
+/* Alça na borda direita do cabeçalho da coluna (a flexível não tem). */
+/*
+ * Divisa entre colunas, da altura da tabela inteira (centrada na borda direita
+ * da coluna), acima do cabeçalho preso: arrastar em qualquer linha muda a largura.
+ */
+.resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 4;
+  width: 9px;
+  margin-left: -5px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.resizer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 3px;
+  background-color: transparent;
+  transition: background-color 150ms ease;
+}
+
+.resizer:focus-visible {
+  outline: none;
+}
+
+.resizer:hover::after,
+.resizer:focus-visible::after,
+.resizer[data-active]::after {
+  background-color: var(--blue);
+}
+
+/* Coluna do botão de escolher as colunas: fica com o espaço que sobra à direita
+   e, com a planilha mais larga que a moldura, presa à direita ao rolar para o lado.
+   O botão fica sempre no canto direito (centralizado nos últimos 36px). */
+.menuCell {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  padding: 0 5px 0 0 !important;
+  background: var(--surface);
+  text-align: right !important;
+}
+
+.table thead th.menuCell {
+  z-index: 3;
+  padding: 0 5px 0 0 !important;
+  background: var(--surface-muted);
+}
+
+.groupRow .menuCell,
+.table tfoot .menuCell {
+  background: var(--surface-muted);
+}
+
+/* Célula que corta o que passa da largura, com reticências. */
+.clip {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.numeric {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right !important;
+  color: var(--text-strong);
+}
+
+/* ---------- Linhas ---------- */
+
+.row {
+  transition: background-color 150ms ease;
+}
+
+.row:hover,
+.row:hover .menuCell {
+  background: var(--surface-hover);
+}
+
+/* Acima da estimativa: faixa vermelha na borda, como o card do Kanban. */
+.row[data-over-estimate] > td:first-child {
+  box-shadow: inset 3px 0 0 var(--red);
+}
+
+.keyLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-sm);
+}
+
+.keyLink img {
+  flex: none;
+}
+
+.keyText {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.keyLink:hover .keyText,
+.summaryLink:hover,
+.parentLink:hover .parentKey,
+.groupParent:hover .groupKey {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Concluída: chave riscada, como no quadro. */
+.done {
+  text-decoration: line-through;
+}
+
+.summaryLink {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-strong);
+}
+
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.person img {
+  flex: none;
+}
+
+.truncate {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.parentLink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+  color: var(--text);
+}
+
+.parentKey {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.muted {
+  color: var(--text-faint);
+}
+
+.overTime {
+  color: var(--red);
+}
+
+.overBadge {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 9999px;
+  background: var(--red-bg);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--red);
+}
+
+.errorRow td {
+  padding-top: 4px;
+  padding-bottom: 8px;
+  font-size: 12.5px;
+  white-space: normal;
+  color: var(--red);
+}
+
+.emptyRow {
+  font-style: italic;
+  color: var(--text-faint);
+}
+
+/* Depois da última linha: o conteúdo fica preso à esquerda ao rolar a planilha para o lado. */
+.table .footerCell {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: none;
+}
+
+.footerContent {
+  position: sticky;
+  left: 10px;
+  width: fit-content;
+}
+
+/* ---------- Grupos ---------- */
+
+.groupRow th,
+.groupRow td {
+  background: var(--surface-muted);
+  font-weight: 600;
+}
+
+.groupTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.collapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.collapse:hover {
+  background: var(--border);
+  color: var(--text-strong);
+}
+
+.groupName {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+
+.groupParent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.groupKey {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-strong);
+}
+
+.groupSummary {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.groupCount {
+  padding: 0 7px;
+  border-radius: 9999px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+/* Limite de WIP da coluna; acima dele, em vermelho (como o cabeçalho da coluna no Kanban). */
+.wip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.wip[data-exceeded] {
+  color: var(--red);
+}
+
+/* ---------- Total ---------- */
+
+.table tfoot th,
+.table tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  border-top: 1px solid var(--border-strong);
+  border-bottom: none;
+  background: var(--surface-muted);
+  font-weight: 600;
+}

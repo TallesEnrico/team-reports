@@ -1,0 +1,68 @@
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada passo depois do primeiro começa com o conector, que ocupa o espaço livre. */
+.step {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.step:first-child {
+  flex: 0 1 auto;
+}
+
+.step + .step::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.marker {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--surface);
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.current {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.current .marker {
+  border-color: var(--text-strong);
+  background: var(--text-strong);
+  color: var(--on-strong);
+}
+
+.done .marker {
+  border-color: var(--green-bg);
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.done + .step::before {
+  background: var(--green);
+  opacity: 0.4;
+}

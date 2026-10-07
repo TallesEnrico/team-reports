@@ -1,0 +1,78 @@
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  margin: 0 -6px;
+  padding: 2px 6px 4px;
+  border-radius: var(--radius-sm);
+  transition: background-color 120ms ease;
+}
+
+.item[data-active] {
+  background: var(--band);
+}
+
+.line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.label {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.value {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+
+/* Segmentos encostados com 2px de fundo entre eles; ponta dos dados arredondada, base reta. */
+.track {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  border-radius: 0 4px 4px 0;
+  outline-offset: 2px;
+}
+
+.segment {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  transition: width 400ms var(--ease-out);
+}
+
+.segment:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.more,
+.empty {
+  font-size: 12px;
+  color: var(--text-muted);
+}

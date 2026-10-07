@@ -1,0 +1,165 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Muitas colunas (ex: os dias do mês): a grade rola dentro do cartão, nunca a página. */
+.scroller {
+  max-height: 520px;
+  overflow: auto;
+}
+
+.grid {
+  width: 100%;
+  /* Cada coluna com pelo menos 16px: em espaço estreito (a prévia do painel), a grade rola para o lado. */
+  min-width: calc(170px + 72px + var(--columns) * 18px);
+  border-collapse: separate;
+  border-spacing: 2px;
+  table-layout: fixed;
+}
+
+/* Largura fixa: numa célula de tabela, o Chrome trata calc()/clamp() com porcentagem como "auto". */
+.corner {
+  width: 170px;
+}
+
+.columnHead {
+  padding: 0 0 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.1;
+  text-align: center;
+  vertical-align: bottom;
+  color: var(--text-muted);
+}
+
+.columnHead span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Muitas colunas estreitas: o rótulo fica em pé. */
+.columnHead[data-vertical] span {
+  max-height: 72px;
+  margin: 0 auto;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.totalHead {
+  width: 72px;
+  padding: 0 0 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-align: right;
+  text-transform: uppercase;
+  vertical-align: bottom;
+  color: var(--text-muted);
+}
+
+.rowHead {
+  padding-right: 8px;
+  overflow: hidden;
+  font-size: 12.5px;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.rowHead > * {
+  display: flex;
+  min-width: 0;
+}
+
+.cellSlot {
+  min-width: 14px;
+  height: 24px;
+  padding: 0;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 24px;
+  border-radius: 3px;
+  background: var(--surface-muted);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  outline-offset: 1px;
+}
+
+.cell[data-active] {
+  box-shadow: 0 0 0 2px var(--text-strong);
+}
+
+.total {
+  padding-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.ramp {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.ramp span {
+  width: 14px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.legendEntry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 8px;
+}
+
+.legendSwatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.hidden {
+  margin-left: 8px;
+}
+
+.empty {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Sem rolagem no papel: sai inteiro na altura (na largura, como na tela). */
+@media print {
+  .scroller {
+    max-height: none;
+  }
+}

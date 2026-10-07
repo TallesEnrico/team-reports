@@ -1,0 +1,151 @@
+/* A seção em si (espaçamento e divisória) vem do IssueDialog. */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.empty {
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--text-faint);
+}
+
+.title {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.meta {
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-muted);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  /* Sem overflow escondido: o menu de status da linha passa da borda da lista. */
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.list li + li {
+  border-top: 1px solid var(--border);
+}
+
+/* Linha: [chave e título, que abrem a filha] [status] [responsável]; o erro do status embaixo. */
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: 10px;
+  padding-right: 12px;
+  transition: background-color 150ms ease;
+}
+
+.row:hover {
+  background: var(--surface-hover);
+}
+
+.row:first-child {
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.row:last-child {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.row:only-child {
+  border-radius: var(--radius);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 0 8px 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.item:hover .summary {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.item:focus-visible {
+  outline-offset: -2px;
+}
+
+.rowError {
+  grid-column: 1 / -1;
+  padding: 0 0 8px 12px;
+  font-size: 12.5px;
+  color: var(--red);
+}
+
+.item img {
+  flex: none;
+}
+
+.key {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Concluída: chave riscada, como no quadro. */
+.done {
+  text-decoration: line-through;
+}
+
+.summary {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.unassigned {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 9999px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

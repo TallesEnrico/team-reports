@@ -1,0 +1,119 @@
+/* Partes comuns das seções de Configurações. */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.heading {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.description {
+  max-width: 640px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.description code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.subheading {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.cardText {
+  margin-top: -8px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.cardText code {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.share {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+}
+
+.shareBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 4px 4px 4px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.shareAction {
+  min-height: 28px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.shareAction:hover:not(:disabled) {
+  background: var(--border);
+}
+
+.shareCode {
+  margin: 0;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+
+.shareFailed {
+  padding: 0 12px 10px;
+  font-size: 12px;
+  color: var(--red);
+}
+
+@media (max-width: 760px) {
+  .card {
+    padding: 16px;
+  }
+}

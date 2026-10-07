@@ -1,0 +1,23 @@
+.keyRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+}
+
+.keyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.keyActions {
+  display: flex;
+  gap: 8px;
+}
+
+.model {
+  max-width: 360px;
+}

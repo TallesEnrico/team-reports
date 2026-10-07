@@ -1,0 +1,292 @@
+.wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th,
+.table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.table thead th {
+  padding-top: 4px;
+  padding-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.table tbody tr {
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.table tbody tr:last-child th,
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.sort:hover {
+  color: var(--text-strong);
+}
+
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 200px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--text-strong);
+  cursor: pointer;
+}
+
+.nameBlock {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.accountNote {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.person:hover .name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.number {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+
+/* Segunda linha das células (esperado, dias, "há N dias"). */
+.sub {
+  display: block;
+  max-width: 120px;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  color: var(--text-muted);
+}
+
+.none {
+  color: var(--text-faint);
+}
+
+.coverage {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 84px;
+}
+
+.coverage .number {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meter {
+  display: block;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--blue-bg);
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--blue);
+}
+
+.warnIcon {
+  color: var(--yellow);
+}
+
+.missing {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 4px;
+  max-width: 120px;
+}
+
+.missing .sub {
+  flex-basis: 100%;
+}
+
+.missingIcon {
+  color: var(--red);
+}
+
+/* ---------- Dias do mês ---------- */
+
+.strip {
+  display: inline-grid;
+  gap: 2px;
+  vertical-align: middle;
+}
+
+/*
+ * Cada dia é uma colunazinha: a altura é a fração da jornada lançada, e a cor, a
+ * faixa das horas (vermelho, amarelo, verde, azul acima da jornada; cinza sem horas).
+ */
+.cell {
+  position: relative;
+  display: block;
+  height: 24px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--blue-bg);
+  cursor: pointer;
+}
+
+.fill {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 2px 2px 0 0;
+  background: var(--blue);
+}
+
+.cell[data-status='danger'] {
+  background: var(--red-bg);
+}
+
+.cell[data-status='danger'] .fill {
+  background: var(--red);
+}
+
+.cell[data-status='alert'] {
+  background: var(--yellow-bg);
+}
+
+.cell[data-status='alert'] .fill {
+  background: var(--yellow);
+}
+
+.cell[data-status='success'] {
+  background: var(--green-bg);
+}
+
+.cell[data-status='success'] .fill {
+  background: var(--green);
+}
+
+.cell[data-status='missing'] {
+  background: var(--border);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+/* Fim de semana e feriado sem horas: só um ponto na base. */
+.cell[data-status='off'] {
+  background: transparent;
+}
+
+.cell[data-status='off']::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 2px;
+  width: 4px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--border-strong);
+}
+
+/* Fim de semana com horas: a barra aparece em cima do fundo vazio. */
+.cell[data-status='off'] .fill {
+  z-index: 1;
+}
+
+.cell[data-status='pending'] {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+/* Hoje, ainda abaixo do verde: as horas aparecem sem cor de faixa (o dia não terminou). */
+.cell[data-status='pending'] .fill {
+  background: var(--text-faint);
+}
+
+.cell[data-today] {
+  box-shadow: inset 0 0 0 1px var(--text-muted);
+}
+
+.cell[data-active] {
+  outline: 2px solid var(--text-strong);
+  outline-offset: 1px;
+}
+
+/* ---------- Mês a mês ---------- */
+
+.spark {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 24px;
+  vertical-align: middle;
+}
+
+.sparkBar {
+  display: block;
+  width: 6px;
+  border-radius: 2px 2px 0 0;
+  background: var(--blue);
+}
+
+.sparkBar[data-tone='muted'] {
+  background: var(--text-faint);
+}
+
+.sparkBar[data-pending] {
+  background: var(--border);
+}
+
+.tooltip {
+  min-width: 180px;
+}

@@ -1,0 +1,138 @@
+.lane {
+  /* Altura do cabeçalho da história: os nomes das colunas da raia param logo abaixo dele. */
+  --lane-header-height: 44px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Preso no topo e à esquerda: a história da raia continua na tela ao rolar o
+   quadro nos dois sentidos, até a próxima raia empurrá-lo. Ocupa a largura
+   visível do quadro, com fundo, para os cards passarem por baixo. */
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100cqw;
+  height: var(--lane-header-height);
+  padding-right: 8px;
+  background: var(--bg);
+  font-size: 14px;
+}
+
+/* Só o resumo encolhe (com reticências): chave, contagem, épico e status ficam inteiros. */
+.header > * {
+  flex-shrink: 0;
+}
+
+.header > .open {
+  flex-shrink: 1;
+}
+
+/* Chave + resumo: um botão só, que abre a história no modal. */
+.open {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.open:hover .key,
+.open:hover .summary {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toggle {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.toggle:hover {
+  background: var(--border);
+  color: var(--text-strong);
+}
+
+.toggle svg {
+  transition: transform 200ms var(--ease-out);
+}
+
+.toggle[aria-expanded='false'] svg {
+  transform: rotate(-90deg);
+}
+
+.key {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* História concluída: chave riscada, como no Jira. */
+.done {
+  text-decoration: line-through;
+}
+
+.summary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.count {
+  flex: none;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.others {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* Épico da história, como a etiqueta do Jira. */
+.epic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  border: 1px solid var(--blue);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  line-height: 22px;
+  color: var(--text-strong);
+}
+
+.epicMark {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--blue);
+  opacity: 0.7;
+}
+
+.row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}

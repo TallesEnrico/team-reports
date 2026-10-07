@@ -1,0 +1,45 @@
+.edge {
+  stroke: var(--text-faint) !important;
+  stroke-width: 2px !important;
+  transition: stroke 150ms ease;
+}
+
+.edge[data-selected] {
+  stroke: var(--blue) !important;
+}
+
+/* Sem dados ainda: tracejada; buscando, os traços andam na direção dos dados. */
+.waiting {
+  stroke-dasharray: 6 5;
+}
+
+.flowing {
+  animation: flow 700ms linear infinite;
+}
+
+.remove {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.remove:hover {
+  border-color: var(--red);
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -22;
+  }
+}

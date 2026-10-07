@@ -1,0 +1,27 @@
+.logo {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+}
+
+.name {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.sidebar {
+  gap: 12px;
+}
+
+.sidebar .name {
+  font-size: 32px;
+}
+
+.compact .name {
+  font-size: 25px;
+}

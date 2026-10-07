@@ -1,0 +1,315 @@
+/* Cada categoria tem a sua cor pastel: dados (azul), transformar (amarelo), mostrar (verde). */
+.piece {
+  --cat-bg: var(--blue-bg);
+  --cat-ink: var(--blue);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 252px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(17, 17, 17, 0.04);
+  font-size: 12.5px;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.piece[data-category='transform'] {
+  --cat-bg: var(--yellow-bg);
+  --cat-ink: var(--yellow);
+}
+
+.piece[data-category='visual'] {
+  --cat-bg: var(--green-bg);
+  --cat-ink: var(--green);
+}
+
+.piece:hover {
+  box-shadow: 0 2px 8px rgba(17, 17, 17, 0.05);
+}
+
+.piece[data-selected] {
+  border-color: var(--text-muted);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 14%, transparent);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 22px;
+  border-bottom: 1px solid var(--border);
+  border-radius: calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px) 0 0;
+  background: var(--cat-bg);
+}
+
+/* Fontes não têm encaixe à esquerda: o título começa na borda. */
+.piece[data-category='source'] .head,
+.piece[data-category='source'] .summary,
+.piece[data-category='source'] .footer {
+  padding-left: 12px;
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--cat-ink);
+}
+
+.titles {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.category {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cat-ink);
+}
+
+.name {
+  overflow: hidden;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.status {
+  flex: none;
+}
+
+.spinning {
+  color: var(--text-muted);
+  animation: spin 900ms linear infinite;
+}
+
+.error {
+  color: var(--red);
+}
+
+.idle {
+  color: var(--yellow);
+}
+
+.ready {
+  color: var(--green);
+}
+
+.summary {
+  display: -webkit-box;
+  padding: 8px 12px 0 22px;
+  overflow: hidden;
+  line-height: 1.45;
+  color: var(--text);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.preview {
+  margin: 8px 12px 0 22px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-hover);
+}
+
+.footer {
+  padding: 6px 12px 9px 22px;
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.count[data-stale] {
+  opacity: 0.6;
+}
+
+.noteIcon {
+  color: var(--yellow);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.errorText {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--red);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.idleText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--yellow);
+}
+
+.fix {
+  padding: 3px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-strong);
+  cursor: pointer;
+}
+
+.fix:hover {
+  background: var(--surface-muted);
+}
+
+/* ---------- Encaixes (handles do React Flow) ----------
+   Seletores com a classe da peça para vencer o CSS padrão do React Flow. */
+
+/* Entrada: um recorte na borda esquerda, do formato da aba de saída. */
+.piece .socket {
+  top: 50%;
+  left: -1px;
+  width: 14px;
+  height: 28px;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--border-strong);
+  border-left: none;
+  border-radius: 0 14px 14px 0;
+  background: var(--bg);
+  box-shadow: inset 2px 0 3px rgba(17, 17, 17, 0.06);
+  transform: translate(0, -50%);
+}
+
+.piece .socket[data-connected] {
+  background: var(--surface-muted);
+}
+
+/* Saída: uma aba que sai da borda direita, na cor da categoria. */
+.piece .tab {
+  top: 50%;
+  right: 0;
+  width: 14px;
+  height: 28px;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--border-strong);
+  border-left: none;
+  border-radius: 0 14px 14px 0;
+  background: var(--cat-bg);
+  transform: translate(100%, -50%);
+  transition: background-color 150ms ease;
+}
+
+.piece .tab:hover {
+  background: var(--cat-ink);
+}
+
+/* Arrastando uma ligação: a entrada que aceita fica verde; a que não aceita, vermelha. */
+.piece :global(.react-flow__handle.connectingto) {
+  background: var(--red-bg);
+  border-color: var(--red);
+}
+
+.piece :global(.react-flow__handle.connectingto.valid) {
+  background: var(--green-bg);
+  border-color: var(--green);
+}
+
+/* "+": encaixa a próxima peça. Aparece sozinho enquanto a peça não tem nada depois dela. */
+.add {
+  position: absolute;
+  top: 50%;
+  right: -46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border-strong);
+  border-radius: 9999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition:
+    opacity 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.add[data-visible],
+.piece:hover .add,
+.add:focus-visible {
+  opacity: 1;
+}
+
+.add:hover {
+  border-color: var(--text-muted);
+  background: var(--text-strong);
+  color: var(--on-strong);
+}
+
+/* Ações da peça selecionada, acima dela. */
+.toolbar {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 4px 12px rgba(17, 17, 17, 0.06);
+}
+
+.toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: var(--surface-muted);
+}
+
+.toolbar button[data-danger]:hover {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

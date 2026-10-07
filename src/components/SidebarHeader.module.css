@@ -1,0 +1,118 @@
+.header {
+  /* O menu se posiciona pelo topo da lateral inteiro: alinhado ao começo dela, abaixo do botão e do logo. */
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  margin-bottom: 22px;
+  /* Espaço do botão de esconder a lateral (AppShell), no canto direito. */
+  padding-right: 40px;
+}
+
+.homeLink {
+  display: inline-flex;
+  border-radius: var(--radius-sm);
+  transition: opacity 150ms ease;
+}
+
+.homeLink:hover {
+  opacity: 0.8;
+}
+
+.logo {
+  width: auto;
+  max-height: 40px;
+  filter: var(--logo-filter);
+  max-width: 150px;
+}
+
+/* Mesma cara do botão ghost (components/Button), mas é um link: leva à página inicial. */
+.backLink {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-muted);
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 150ms var(--ease-out);
+}
+
+.backLink:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+  color: var(--text-strong);
+}
+
+.backLink:active {
+  transform: scale(0.98);
+}
+
+.backLink svg {
+  transition: transform 200ms var(--ease-out);
+}
+
+.backLink:hover svg {
+  transform: translateX(-2px);
+}
+
+/* ---------- Menu das ferramentas (fora da página inicial) ---------- */
+
+/* O botão "Início" e o logo juntos: o mouse em qualquer um (ou no vão entre eles) abre o menu. */
+.navigation {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Alinhado ao começo da lateral e no máximo da largura do conteúdo dela (a lateral corta o que passa). */
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  width: min(300px, 100cqw);
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  animation: menu-in 160ms var(--ease-out) both;
+}
+
+/* Ponte invisível entre o botão/logo e o menu: o mouse passa pelo vão sem sair do hover. */
+.menu::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  right: 0;
+  left: 0;
+  height: 9px;
+}
+
+.menuHeading {
+  padding: 4px 6px 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}

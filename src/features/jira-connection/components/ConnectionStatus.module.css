@@ -1,0 +1,109 @@
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.avatarWrap {
+  position: relative;
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+
+.icon {
+  color: var(--text-muted);
+}
+
+.avatar {
+  display: block;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.presence {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--surface);
+  border-radius: 9999px;
+  background: var(--text-faint);
+}
+
+.online {
+  background: var(--green);
+}
+
+.info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.email {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-strong);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.squad {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* ---------- Token recusado ---------- */
+
+.alert {
+  display: flex;
+  flex-basis: 100%;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--red) 18%, transparent);
+  border-radius: var(--radius);
+  background: var(--red-bg);
+}
+
+.alertText {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--red);
+}
+
+.alertText svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.alertText strong {
+  font-weight: 600;
+}
+
+.reconnect {
+  align-self: flex-start;
+  min-height: 30px;
+  font-size: 12.5px;
+}

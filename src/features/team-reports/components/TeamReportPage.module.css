@@ -1,0 +1,41 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 32px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.errorJql {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-top: 12px;
+  text-align: left;
+}
+
+/* No desktop a tabela encolhe para caber na altura da janela (ver AppShell),
+   mantendo cabeçalho e linha de total sempre visíveis. */
+@media (min-width: 961px) {
+  .results {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}

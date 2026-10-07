@@ -1,0 +1,171 @@
+/* A altura inclui o eixo (linha de baixo): o cartão nunca ganha rolagem própria. */
+.chart {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: var(--plot-height) auto;
+  column-gap: 8px;
+  /* Espaço para o rótulo da coluna mais alta e a marca do topo do eixo. */
+  padding-top: 18px;
+}
+
+/* ---------- Eixo de horas ---------- */
+
+.yAxis {
+  position: relative;
+  min-width: 30px;
+}
+
+.tick {
+  position: absolute;
+  right: 0;
+  transform: translateY(50%);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-faint);
+}
+
+/* ---------- Área das colunas ---------- */
+
+.plot {
+  position: relative;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.gridline {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.columns {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.slot {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Fim de semana e feriado: faixa de fundo, sem jornada esperada. */
+.slot[data-off] {
+  background: var(--band);
+}
+
+/* A coluna inteira é o alvo do hover, não só a barra pintada. */
+.hit {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: var(--radius-sm);
+  outline-offset: -2px;
+}
+
+.bar {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(24px, calc(100% - 4px));
+  border-radius: 4px 4px 0 0;
+  background: var(--blue);
+  transform: translateX(-50%);
+  transition:
+    height 400ms var(--ease-out),
+    filter 150ms ease;
+}
+
+.bar[data-tone='muted'] {
+  background: var(--text-faint);
+}
+
+.hit[data-active] .bar {
+  filter: brightness(1.18);
+}
+
+.hit[data-active] {
+  background: var(--band);
+}
+
+/* Mês ainda carregando: um traço baixo no lugar da barra. */
+.pending {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(24px, calc(100% - 4px));
+  height: 8%;
+  border-radius: 4px 4px 0 0;
+  background: var(--border);
+  transform: translateX(-50%);
+  animation: pulse 1200ms ease-in-out infinite alternate;
+}
+
+.reference {
+  position: absolute;
+  z-index: 1;
+  height: 2px;
+  background: var(--text-strong);
+  transform: translateY(50%);
+}
+
+/* `line`: as marcas de colunas vizinhas se encostam e leem como uma linha. */
+.reference[data-style='line'] {
+  right: 0;
+  left: 0;
+}
+
+.reference[data-style='tick'] {
+  left: 50%;
+  width: min(36px, calc(100% - 2px));
+  border-radius: 1px;
+  transform: translate(-50%, 50%);
+}
+
+.cap {
+  position: absolute;
+  left: 50%;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text);
+  transform: translateX(-50%);
+}
+
+/* ---------- Eixo de baixo ---------- */
+
+.xAxis {
+  display: flex;
+  grid-column: 2;
+  padding-top: 6px;
+}
+
+.axisLabel {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: visible;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+.tooltip {
+  min-width: 200px;
+}
+
+@keyframes pulse {
+  to {
+    opacity: 0.4;
+  }
+}

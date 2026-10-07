@@ -1,0 +1,90 @@
+/* As colunas dos blocos seguem a largura do dashboard (não a da janela): com a lateral
+   escondida cabe mais, e a impressão, que sai com a largura da tela, fica igual a ela. */
+.view {
+  position: relative;
+  container: dashboard / inline-size;
+}
+
+/* "Atualizando…" preso no topo da área que rola: o dashboard é mais alto que a janela. */
+.refreshing {
+  position: sticky;
+  top: 8px;
+  z-index: 10;
+  height: 48px;
+  margin-bottom: -48px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 16px;
+}
+
+.cell {
+  display: flex;
+  min-width: 0;
+  animation: rise 500ms var(--ease-out) both;
+  animation-delay: calc(min(var(--index), 12) * 50ms);
+}
+
+.cell[data-width='quarter'] {
+  grid-column: span 3;
+}
+
+.cell[data-width='third'] {
+  grid-column: span 4;
+}
+
+.cell[data-width='half'] {
+  grid-column: span 6;
+}
+
+.cell[data-width='full'] {
+  grid-column: span 12;
+}
+
+.widget {
+  flex: 1;
+}
+
+.cta {
+  margin-top: 12px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* 840 px: a largura do dashboard numa janela de 1200 px, com a lateral no tamanho padrão. */
+@container dashboard (max-width: 840px) {
+  .cell[data-width='quarter'],
+  .cell[data-width='third'] {
+    grid-column: span 6;
+  }
+
+  .cell[data-width='half'] {
+    grid-column: span 12;
+  }
+}
+
+@container dashboard (max-width: 600px) {
+  .cell[data-width] {
+    grid-column: span 12;
+  }
+}
+
+/* Impressão: a mesma grade da tela (o AppShell mantém a largura), sem cortar um bloco entre folhas. */
+@media print {
+  .refreshing {
+    display: none;
+  }
+
+  .cell {
+    animation: none;
+    break-inside: avoid;
+  }
+}

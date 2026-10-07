@@ -1,0 +1,441 @@
+/* Tailwind v4. `source('..')` limita a varredura de classes a src/ (sem ia/, scripts/…). */
+@import 'tailwindcss' source('..');
+
+/* `dark:` segue o tema do app (`<html data-theme>`, ver useThemeStore), não só o do sistema. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Minimalist Editorial (ia/skills/minimalist-ui): monocromático quente, bordas
+   de 1px, pastéis só como acento, serif para títulos e mono para dados.
+   Tema escuro: as mesmas variáveis com outros valores, em `[data-theme='dark']`
+   (abaixo). Cor nova vira variável aqui, com o valor dos dois temas: cor fixa
+   num componente fica igual no escuro. */
+
+/* Tokens do projeto expostos como utilitários do Tailwind:
+   bg-surface, text-muted, border-border, bg-blue-soft text-blue-ink etc.
+   `inline` faz o utilitário referenciar a variável, então a fonte continua sendo o :root abaixo.
+   font-sans/serif/mono, rounded-sm/lg e ease-out já usam os valores do projeto,
+   porque o :root abaixo redefine essas variáveis do tema. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-default: var(--text);
+  --color-strong: var(--text-strong);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+
+  --color-blue-soft: var(--blue-bg);
+  --color-blue-ink: var(--blue);
+  --color-red-soft: var(--red-bg);
+  --color-red-ink: var(--red);
+  --color-green-soft: var(--green-bg);
+  --color-green-ink: var(--green);
+  --color-yellow-soft: var(--yellow-bg);
+  --color-yellow-ink: var(--yellow);
+
+  --color-tint: var(--tint);
+}
+
+/* Folha da impressão: A4 deitada, como a tela (ver o `@media print` abaixo e o AppShell). */
+@page {
+  size: A4 landscape;
+  margin: 10mm;
+}
+
+/* Base e componentes ficam em camadas para que os utilitários do Tailwind
+   possam sobrescrevê-los (ex: `w-12` num `.input`). CSS Modules continuam fora
+   de camada e, por isso, vencem utilitários no mesmo elemento. */
+@layer base {
+  :root {
+    --bg: #fbfbfa;
+    --surface: #ffffff;
+    --surface-muted: #f7f6f3;
+    --surface-hover: #f9f9f8;
+    --border: #eaeaea;
+    --border-strong: #d9d8d4;
+    --scrollbar-thumb: rgba(17, 17, 17, 0.22);
+    --scrollbar-thumb-active: rgba(17, 17, 17, 0.38);
+
+    --text: #2f3437;
+    --text-strong: #111111;
+    --text-muted: #787774;
+    --text-faint: #a5a4a0;
+
+    --blue-bg: #e1f3fe;
+    --blue: #1f6c9f;
+    --red-bg: #fdebec;
+    --red: #9f2f2d;
+    --green-bg: #edf3ec;
+    --green: #346538;
+    --yellow-bg: #fbf3db;
+    --yellow: #956400;
+
+    /* Texto sobre a tinta forte (botão principal, escolha marcada) e o hover dela. */
+    --on-strong: #ffffff;
+    --strong-hover: #333333;
+    /* Fundo leve dos botões do cabeçalho ("Atualizar", "Imprimir"). */
+    --tint: color-mix(in oklab, oklch(92.3% 0.003 48.717) 50%, transparent);
+    /* Faixas de contexto nos gráficos (fins de semana) e grupos sobre o fundo. */
+    --band: rgba(17, 17, 17, 0.035);
+    /* Grade de pontos dos painéis decorativos. */
+    --dots: rgba(17, 17, 17, 0.07);
+    /* Fundo atrás dos modais. */
+    --backdrop: rgba(17, 17, 17, 0.35);
+    --backdrop-strong: rgba(17, 17, 17, 0.45);
+
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.06);
+    --shadow-modal: 0 24px 64px rgba(17, 17, 17, 0.08);
+
+    /* Logos em PNG (marcas Time): no escuro, o azul-marinho e o preto clareiam. */
+    --logo-filter: none;
+
+    /* Gráficos do Dashboard (lib/palette.ts): as 8 séries, na ordem validada
+       para daltonismo (skill dataviz), e a rampa do mapa de calor (passo 1 = valor
+       mais baixo) com o texto legível sobre cada passo. */
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --series-4: #eda100;
+    --series-5: #e87ba4;
+    --series-6: #008300;
+    --series-7: #4a3aa7;
+    --series-8: #e34948;
+
+    --heat-1: #cde2fb;
+    --heat-2: #9ec5f4;
+    --heat-3: #6da7ec;
+    --heat-4: #3987e5;
+    --heat-5: #256abf;
+    --heat-6: #184f95;
+    --heat-7: #0d366b;
+    --heat-ink-1: #111111;
+    --heat-ink-2: #111111;
+    --heat-ink-3: #111111;
+    --heat-ink-4: #ffffff;
+    --heat-ink-5: #ffffff;
+    --heat-ink-6: #ffffff;
+    --heat-ink-7: #ffffff;
+
+    --font-sans: 'Geist Variable', 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    --font-serif: 'Newsreader Variable', Georgia, serif;
+    --font-mono: 'Geist Mono Variable', 'SF Mono', ui-monospace, monospace;
+
+    --radius-sm: 4px;
+    --radius: 6px;
+    --radius-lg: 10px;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+    color-scheme: light;
+  }
+
+  /* Tema escuro: grafite quente, na mesma ordem do claro (cartão > fundo >
+     hover > muted): o que é rebaixado no claro (trilhos, cabeçalhos de tabela,
+     colunas) continua rebaixado, e o que fica por cima continua por cima. Os
+     pastéis viram fundos escuros com a tinta clara. Só na tela: a impressão
+     sai sempre no claro. */
+  @media screen {
+    :root[data-theme='dark'] {
+      --bg: #1b1b1a;
+      --surface: #222221;
+      --surface-muted: #181817;
+      --surface-hover: #1e1e1d;
+      --border: #313130;
+      --border-strong: #41413e;
+      --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+      --scrollbar-thumb-active: rgba(255, 255, 255, 0.34);
+
+      --text: #d4d4d0;
+      --text-strong: #f4f4f2;
+      --text-muted: #9b9a96;
+      --text-faint: #6d6c68;
+
+      --blue-bg: #1a2e3e;
+      --blue: #6cb3e9;
+      --red-bg: #3a2222;
+      --red: #f0908b;
+      --green-bg: #1d3121;
+      --green: #82c58d;
+      --yellow-bg: #382d16;
+      --yellow: #ddb35c;
+
+      --on-strong: #1b1b1a;
+      --strong-hover: #d8d8d5;
+      --tint: rgba(255, 255, 255, 0.06);
+      --band: rgba(255, 255, 255, 0.035);
+      --dots: rgba(255, 255, 255, 0.07);
+      --backdrop: rgba(0, 0, 0, 0.6);
+      --backdrop-strong: rgba(0, 0, 0, 0.7);
+
+      --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.35);
+      --shadow-popover: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.6);
+
+      --logo-filter: invert(1) hue-rotate(180deg);
+
+      /* Os mesmos 8 tons, nos passos validados para o fundo escuro (skill dataviz). */
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --series-3: #199e70;
+      --series-4: #c98500;
+      --series-5: #d55181;
+      --series-6: #008300;
+      --series-7: #9085e9;
+      --series-8: #e66767;
+
+      /* No escuro, o valor baixo some no fundo e o alto acende: a rampa vai do escuro ao claro. */
+      --heat-1: #0d366b;
+      --heat-2: #184f95;
+      --heat-3: #256abf;
+      --heat-4: #3987e5;
+      --heat-5: #6da7ec;
+      --heat-6: #9ec5f4;
+      --heat-7: #cde2fb;
+      --heat-ink-1: #ffffff;
+      --heat-ink-2: #ffffff;
+      --heat-ink-3: #ffffff;
+      --heat-ink-4: #ffffff;
+      --heat-ink-5: #111111;
+      --heat-ink-6: #111111;
+      --heat-ink-7: #111111;
+
+      color-scheme: dark;
+    }
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  kbd {
+    display: inline-block;
+    padding: 0 5px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 18px;
+    color: var(--text-muted);
+  }
+
+  /* Barras de rolagem finas que só aparecem com o mouse sobre a área rolável
+     (no trackpad elas não fazem falta; no mouse, sim). A barra existe sempre,
+     só com cor transparente: ligar e desligar no hover faria o conteúdo
+     "pular" no Windows, onde a barra ocupa espaço.
+     Padrão (Firefox e Chrome 121+): */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  *:hover {
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+
+  /* Safari (não suporta scrollbar-color): */
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: transparent;
+  }
+
+  *:hover::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-active);
+  }
+
+  /* Impressão: as cores saem como na tela (os gráficos são fundos coloridos, que o navegador
+     deixa de fora sem "Gráficos de fundo" ligado). */
+  @media print {
+    :root {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      background: var(--surface);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* ---------- Campos nativos ---------- */
+
+  .input {
+    width: 100%;
+    min-height: 36px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition: border-color 150ms ease;
+  }
+
+  .input:hover {
+    border-color: var(--border-strong);
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: var(--text-muted);
+  }
+
+  textarea.input {
+    resize: vertical;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  select.input {
+    appearance: none;
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath stroke='%23787774' stroke-width='1.6' d='m1 1 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    cursor: pointer;
+  }
+}
+
+/* ---------- react-select (unstyled + classNamePrefix="ms") ----------
+   Fora de camada de propósito: o react-select injeta estilos funcionais via
+   emotion, também sem camada. Em uma camada, estas regras perderiam sempre para
+   eles; fora, empatam em especificidade. Valores que precisam vencer o emotion
+   (ex: z-index do menu) vão pelo prop `styles` em components/MultiSelect.tsx. */
+
+.ms__control {
+  min-height: 36px;
+  padding: 3px 6px 3px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: text;
+  transition: border-color 150ms ease;
+}
+
+.ms__control:hover {
+  border-color: var(--border-strong);
+}
+
+.ms__control--is-focused {
+  border-color: var(--text-muted);
+}
+
+.ms__value-container {
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.ms__placeholder {
+  color: var(--text-faint);
+}
+
+.ms__multi-value {
+  align-items: center;
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  line-height: 20px;
+}
+
+.ms__multi-value__label {
+  padding: 0 2px 0 7px;
+}
+
+.ms__multi-value__remove {
+  padding: 0 4px;
+  color: var(--text-faint);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  cursor: pointer;
+}
+
+.ms__multi-value__remove:hover {
+  color: var(--red);
+  background: var(--red-bg);
+}
+
+.ms__indicators {
+  gap: 2px;
+}
+
+.ms__indicator {
+  padding: 4px;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+
+.ms__indicator:hover {
+  color: var(--text);
+}
+
+.ms__indicator-separator {
+  display: none;
+}
+
+.ms__menu {
+  margin-top: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-popover);
+  font-size: 13px;
+}
+
+.ms__group-heading {
+  padding: 8px 8px 4px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ms__option {
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.ms__option--is-focused {
+  background: var(--surface-muted);
+}
+
+.ms__menu-notice {
+  padding: 8px;
+  color: var(--text-muted);
+}
+

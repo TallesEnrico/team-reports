@@ -1,0 +1,132 @@
+/* Painel da miniatura: fundo bege com uma grade de pontos quase invisível. */
+.preview {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--surface-muted);
+  background-image: radial-gradient(var(--dots) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 172px;
+  padding: 10px 8px;
+}
+
+/* ---------- Tintas (as mesmas variáveis do app) ---------- */
+
+.faint {
+  fill: var(--border-strong);
+}
+
+.ink {
+  fill: var(--text);
+}
+
+.line {
+  fill: var(--border-strong);
+}
+
+.grid {
+  fill: var(--border);
+}
+
+.band {
+  fill: var(--band);
+}
+
+.blue {
+  fill: var(--blue);
+}
+
+.blueBg {
+  fill: var(--blue-bg);
+}
+
+.green {
+  fill: var(--green);
+}
+
+.greenBg {
+  fill: var(--green-bg);
+}
+
+.yellowBg {
+  fill: var(--yellow-bg);
+}
+
+.red {
+  fill: var(--red);
+  opacity: 0.75;
+}
+
+.surfaceDeep {
+  fill: var(--border);
+}
+
+.card {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.cardLifted {
+  fill: var(--surface);
+  stroke: var(--text-faint);
+  stroke-width: 1;
+  filter: drop-shadow(0 3px 4px rgba(17, 17, 17, 0.08));
+}
+
+.edge {
+  fill: none;
+  stroke: var(--text-faint);
+  stroke-width: 1.5;
+}
+
+.tab {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.bar {
+  fill: var(--yellow);
+  opacity: 0.5;
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+
+/* ---------- Movimento no hover do card (só transform) ---------- */
+
+.dragged,
+.lifted {
+  transition: transform 400ms var(--ease-out);
+}
+
+/* Kanban: o card arrastado chega à coluna verde. */
+:global(a:hover) .dragged,
+:global(a:focus-visible) .dragged {
+  transform: translate(48px, -12px);
+}
+
+/* Dashboard: o bloco final sobe um pouco, como uma peça encaixando. */
+:global(a:hover) .lifted,
+:global(a:focus-visible) .lifted {
+  transform: translateY(-3px);
+}
+
+/* Metrics: as colunas crescem de novo a partir da base. */
+:global(a:hover) .bar,
+:global(a:focus-visible) .bar {
+  animation: grow 500ms var(--ease-out) both;
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0.7);
+  }
+}

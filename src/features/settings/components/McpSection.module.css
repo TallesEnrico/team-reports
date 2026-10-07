@@ -1,0 +1,175 @@
+/* ---------- Ferramentas ---------- */
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.tool {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.toolHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.toolTitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.access {
+  flex: none;
+  padding: 0 7px;
+  border-radius: 9999px;
+  background: var(--blue-bg);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 18px;
+  color: var(--blue);
+}
+
+.write {
+  background: var(--yellow-bg);
+  color: var(--yellow);
+}
+
+.toolName {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.toolDescription {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* ---------- Clientes ---------- */
+
+.clients {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.client {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 150ms var(--ease-out);
+}
+
+.client:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+}
+
+.client:active {
+  transform: scale(0.99);
+}
+
+.clientIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.clientText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.clientName {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.clientDetail {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+.caret {
+  flex: none;
+  color: var(--text-faint);
+  transition: transform 200ms var(--ease-out);
+}
+
+.client:hover .caret {
+  transform: translateX(2px);
+  color: var(--text-muted);
+}
+
+/* ---------- Configuração ---------- */
+
+.url {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 8px 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.urlLabel {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.urlValue {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+
+.urlCopy {
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 12.5px;
+}
+
+.disconnected {
+  font-size: 13px;
+  color: var(--text-muted);
+}

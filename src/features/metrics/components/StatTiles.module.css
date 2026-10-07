@@ -1,0 +1,131 @@
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-align: left;
+  animation: enter 600ms var(--ease-out) both;
+}
+
+.clickable {
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 150ms var(--ease-out);
+}
+
+.clickable:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-card);
+}
+
+.clickable:active {
+  transform: scale(0.99);
+}
+
+.clickable[aria-pressed='true'] {
+  border-color: var(--text-strong);
+  box-shadow: inset 0 0 0 1px var(--text-strong);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Número grande com algarismos proporcionais (tabular só em colunas). */
+.value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+
+.of {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-muted);
+}
+
+.alertIcon {
+  flex: none;
+  color: var(--red);
+}
+
+.goodIcon {
+  flex: none;
+  color: var(--green);
+}
+
+.meter {
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--blue-bg);
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--blue);
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.delta[data-direction='up'] {
+  color: var(--green);
+}
+
+.delta[data-direction='down'] {
+  color: var(--red);
+}
+
+.caption {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.action {
+  margin-top: auto;
+  padding-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

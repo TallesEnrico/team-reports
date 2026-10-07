@@ -1,0 +1,86 @@
+/* Fora da edição: o texto com o lápis, que aparece no hover e no foco. */
+.display {
+  position: relative;
+  padding-right: 28px;
+  border-radius: var(--radius);
+  cursor: text;
+  transition: background-color 150ms ease;
+}
+
+.display:hover {
+  background: var(--surface-hover);
+}
+
+.editButton {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 150ms ease,
+    background-color 150ms ease;
+}
+
+.display:hover .editButton,
+.editButton:focus-visible {
+  opacity: 1;
+}
+
+.editButton:hover {
+  background: var(--surface-muted);
+  color: var(--text-strong);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* A largura toda do lugar onde o texto estava (ex: o cabeçalho do modal). */
+  width: 100%;
+}
+
+/* Campo de uma linha (o título): um textarea que cresce com o texto, na fonte do título (o textarea global é mono). */
+.input:global(.input) {
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-strong);
+  resize: none;
+}
+
+/* A descrição na fonte do texto (o textarea global é mono). */
+.textarea:global(.input) {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.error {
+  font-size: 12.5px;
+  color: var(--red);
+}
+
+.input:read-only,
+.textarea:read-only {
+  color: var(--text-muted);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.keys {
+  font-size: 11.5px;
+  color: var(--text-faint);
+}

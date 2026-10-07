@@ -1,0 +1,326 @@
+/* Cabeçalho, fundo e rolagem vêm do Modal (src/components). */
+
+.headerTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: start;
+  gap: 8px 100px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.closeOnSuccess {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.closeOnSuccess input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--text-strong);
+  cursor: pointer;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+
+.lead {
+  font-size: 13.5px;
+  line-height: 1.5;
+  padding-left: 8px;
+  color: var(--text-muted);
+}
+
+/* ---------- Pesquisa ---------- */
+
+.search {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  color: var(--text-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.searchInput {
+  padding-left: 34px;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resultsTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: opacity 150ms ease;
+}
+
+/* Pesquisa nova a caminho: a lista anterior fica, esmaecida. */
+.list[aria-busy='true'] {
+  opacity: 0.6;
+}
+
+.list li + li {
+  border-top: 1px solid var(--border);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.option:hover {
+  background: var(--surface-hover);
+}
+
+.option:focus-visible {
+  outline-offset: -2px;
+}
+
+.option img,
+.selectedHeader img {
+  flex: none;
+}
+
+.key {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.summary {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.empty {
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--text-faint);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+
+/* ---------- Tarefa escolhida ---------- */
+
+.selected {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+}
+
+/*
+ * Alinhado pela primeira linha (24px, a altura do seletor de status): um erro
+ * do seletor quebra para baixo dele sem desalinhar a chave e o "Trocar".
+ */
+.selectedHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.selectedHeader > img {
+  margin-top: 4px;
+}
+
+.selectedHeader > .key {
+  line-height: 24px;
+}
+
+/* O seletor ocupa o resto da linha; a mensagem de erro dele quebra aqui dentro. */
+.statusSlot {
+  flex: 1;
+  min-width: 0;
+}
+
+.changeButton {
+  flex: none;
+  min-height: 30px;
+  margin-top: -3px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+
+/* Título inteiro, quebrando linha (sem reticências, ao contrário da lista). */
+.selectedSummary {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+
+/* Lançado, estimativa e restante da tarefa escolhida (o mesmo do modal da issue, menor). */
+.time {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+/* Accordion nativo (<details>): abre e fecha pelo teclado sem JS. */
+.description {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.description summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.description summary::-webkit-details-marker {
+  display: none;
+}
+
+.caret {
+  color: var(--text-muted);
+  transition: transform 150ms var(--ease-out);
+}
+
+.description[open] .caret {
+  transform: rotate(90deg);
+}
+
+/*
+ * Abrir e fechar animados: o conteúdo do <details> vira um grid de uma linha
+ * que vai de 0fr a 1fr (altura) e aparece com fade. `content-visibility`
+ * discreto mantém o conteúdo visível enquanto fecha. Sem suporte a
+ * ::details-content, a regra é ignorada e o accordion abre sem animação.
+ */
+.description::details-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 250ms var(--ease-out),
+    opacity 200ms ease,
+    content-visibility 250ms allow-discrete;
+}
+
+.description[open]::details-content {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .description::details-content {
+    transition: none;
+  }
+}
+
+/* Item do grid: encolhe até 0 e corta o conteúdo (inclusive a margem de cima). */
+.descriptionPanel {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Descrição longa rola dentro do accordion; o formulário continua à vista. */
+.descriptionBody {
+  max-height: 220px;
+  margin-top: 8px;
+  overflow-y: auto;
+}
+
+.descriptionText {
+  font-size: 13.5px;
+  line-height: 1.6;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  color: var(--text);
+}
+
+/* ---------- Lançado ---------- */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

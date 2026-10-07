@@ -1,0 +1,143 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+.link:hover,
+.link:focus-visible {
+  border-color: var(--border);
+  background: var(--surface-hover);
+}
+
+/* A tela aberta (NavLink põe `aria-current="page"`). */
+.link[aria-current='page'] {
+  border-color: var(--border);
+  background: var(--surface-muted);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.tagline {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+.caret {
+  flex: none;
+  color: var(--text-faint);
+  transition: transform 200ms var(--ease-out);
+}
+
+.link:hover .caret {
+  transform: translateX(2px);
+  color: var(--text-muted);
+}
+
+/* Configurações não é ferramenta: fica no fim, separada por uma linha. */
+.settings {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---------- Menu da logo: itens mais baixos ---------- */
+
+.compact {
+  gap: 2px;
+}
+
+.compact .link {
+  gap: 10px;
+  padding: 6px;
+}
+
+.compact .settings {
+  margin-top: 4px;
+  padding-top: 6px;
+}
+
+.compact .name {
+  font-size: 13px;
+}
+
+.compact .tagline {
+  font-size: 11.5px;
+}
+
+.iconsOnly {
+  align-items: center;
+  gap: 6px;
+}
+
+.iconsOnly .link {
+  position: relative;
+  justify-content: center;
+  width: 42px;
+  padding: 4px;
+}
+
+.iconsOnly .text,
+.iconsOnly .caret {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.iconsOnly .settings {
+  display: flex;
+  justify-content: center;
+  align-self: stretch;
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+@media (max-width: 960px) {
+  .iconsOnly {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .iconsOnly .settings {
+    width: auto;
+    margin-top: 0;
+    margin-left: 4px;
+    padding-top: 0;
+    padding-left: 8px;
+    border-top: none;
+    border-left: 1px solid var(--border);
+  }
+}

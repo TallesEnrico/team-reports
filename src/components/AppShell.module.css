@@ -1,0 +1,274 @@
+.page {
+  /* Padrão da lateral; o usuário pode redimensionar (SIDEBAR_WIDTH em useSidebarStore.ts). */
+  --sidebar-width: 320px;
+  --rail-width: 72px;
+
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.page[data-collapsed] {
+  grid-template-columns: var(--rail-width) minmax(0, 1fr);
+}
+
+.page[data-motion]:not([data-resizing]) {
+  transition: grid-template-columns 340ms var(--ease-out);
+}
+
+/* ---------- Lateral ---------- */
+
+/* Moldura fixa da lateral: o conteúdo rola dentro dela, e o botão de esconder
+   e a alça de largura ficam parados na borda. */
+.sidebarFrame {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-width: 0;
+}
+
+.clip {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: var(--sidebar-width);
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px 15px;
+  background: var(--surface);
+  /* Componentes da lateral se adaptam à largura dela (ex: datas empilham). */
+  container: sidebar / inline-size;
+}
+
+.page[data-collapsed] .sidebar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.page[data-motion]:not([data-resizing]) .sidebar {
+  transition: opacity 200ms ease 100ms;
+}
+
+.page[data-motion]:not([data-resizing])[data-collapsed] .sidebar {
+  transition: opacity 140ms ease;
+}
+
+/* Empurra o rodapé (conta conectada) para o fim quando o conteúdo é curto. */
+.sidebarContent {
+  flex: 1 0 auto;
+}
+
+.collapseButton {
+  position: absolute;
+  top: 20px;
+  right: 14px;
+  z-index: 2;
+  width: 32px;
+  min-height: 32px;
+  color: var(--text-muted);
+}
+
+.collapseButton svg {
+  transition: transform 340ms var(--ease-out);
+}
+
+.page[data-collapsed] .collapseButton svg {
+  transform: scaleX(-1);
+}
+
+.collapseButton:hover:not(:disabled) {
+  color: var(--text-strong);
+}
+
+/* Alça na borda direita: arrastar muda a largura; duplo clique volta ao padrão. */
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  bottom: 0;
+  z-index: 3;
+  width: 9px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.resizeHandle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 3px;
+  background-color: transparent;
+  transition: background-color 150ms ease;
+}
+
+.resizeHandle:focus-visible {
+  outline: none;
+}
+
+.resizeHandle:hover::after,
+.resizeHandle:focus-visible::after,
+.page[data-resizing] .resizeHandle::after {
+  background-color: var(--blue);
+}
+
+.page[data-collapsed] .resizeHandle {
+  pointer-events: none;
+}
+
+.rail {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 64px 0 16px;
+  opacity: 0;
+  pointer-events: none;
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.page[data-collapsed] .rail {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.page[data-motion]:not([data-resizing]) .rail {
+  transition: opacity 140ms ease;
+}
+
+.page[data-motion]:not([data-resizing])[data-collapsed] .rail {
+  transition: opacity 200ms ease 150ms;
+}
+
+/* ---------- Área principal ---------- */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 28px 20px 32px;
+  /* Profundidade sutil em tom quente, sem gradiente visível. */
+  background: radial-gradient(1200px 420px at 100% 0%, rgba(196, 178, 140, 0.07), transparent 70%);
+}
+
+/* No desktop a área principal ocupa a altura da janela, e quem rola é o
+   conteúdo dela (tabela, quadro), mantendo cabeçalhos sempre visíveis. */
+@media (min-width: 961px) {
+  .page {
+    height: 100vh;
+  }
+
+  .main {
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 960px) {
+  .page,
+  .page[data-collapsed] {
+    grid-template-columns: 1fr;
+  }
+
+  .page[data-motion]:not([data-resizing]) {
+    transition: none;
+  }
+
+  .sidebarFrame {
+    position: relative;
+    height: auto;
+  }
+
+  .clip {
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar {
+    width: auto;
+    height: auto;
+  }
+
+  /* Uma coluna só: a largura não se ajusta; encolhida, vira uma barra de ícones. */
+  .resizeHandle {
+    display: none;
+  }
+
+  .page[data-collapsed] .sidebar {
+    display: none;
+  }
+
+  .page[data-collapsed] .rail {
+    position: relative;
+    inset: auto;
+    flex-direction: row;
+    align-items: center;
+    height: auto;
+    padding: 10px 52px 10px 12px;
+    overflow: visible;
+  }
+
+  .page[data-collapsed] .collapseButton {
+    top: 12px;
+  }
+
+  .page[data-motion]:not([data-resizing]) .rail,
+  .page[data-motion]:not([data-resizing])[data-collapsed] .rail {
+    transition: opacity 160ms ease;
+  }
+
+  .main {
+    padding: 28px 16px 40px;
+  }
+}
+
+/* Impressão: só a área principal, por inteiro (sem a lateral e sem a rolagem interna), com a
+   largura que ela tem na tela e reduzida para caber na folha (`--print-width` e `--print-zoom`,
+   medidos no `beforeprint` pelo AppShell.tsx): sai igual à tela, com as mesmas colunas. */
+@media print {
+  .page,
+  .page[data-collapsed] {
+    display: block;
+    height: auto;
+  }
+
+  .sidebarFrame {
+    display: none;
+  }
+
+  .main {
+    width: var(--print-width, auto);
+    height: auto;
+    margin: 0 auto;
+    overflow: visible;
+    padding: 0;
+    background: none;
+    zoom: var(--print-zoom, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page[data-motion]:not([data-resizing]),
+  .page[data-motion]:not([data-resizing]) .sidebar,
+  .page[data-motion]:not([data-resizing]) .rail,
+  .collapseButton svg {
+    transition: none;
+  }
+}

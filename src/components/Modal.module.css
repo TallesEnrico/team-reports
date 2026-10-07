@@ -1,0 +1,80 @@
+/* O preflight do Tailwind zera margens; `margin: auto` devolve a centralização nativa do <dialog>. */
+.dialog {
+  max-height: calc(100vh - 64px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-modal);
+  /* Recorta o fundo do cabeçalho nos cantos arredondados; quem rola é o corpo. */
+  overflow: hidden;
+  animation: dialog-in 300ms var(--ease-out) both;
+}
+
+.medium {
+  width: min(600px, calc(100vw - 32px));
+}
+
+.large {
+  width: min(820px, calc(100vw - 32px));
+}
+
+/* Só aberto: sem `[open]`, o display sobrescreveria o `none` do <dialog> fechado. */
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog::backdrop {
+  background: var(--backdrop, rgba(17, 17, 17, 0.35));
+  animation: backdrop-in 200ms ease both;
+}
+
+.header {
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 20px 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-muted);
+}
+
+.heading {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  /* Todo o espaço ao lado do "×": um campo no cabeçalho (ex: o título em edição) não encolhe. */
+  min-width: 0;
+}
+
+/* O hover do botão ghost usa o mesmo tom do cabeçalho; aqui ele escurece um pouco. */
+.header .closeButton:hover:not(:disabled) {
+  background: var(--border);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  padding: 16px 24px 24px;
+  overflow-y: auto;
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

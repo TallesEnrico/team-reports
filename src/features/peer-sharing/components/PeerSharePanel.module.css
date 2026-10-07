@@ -1,0 +1,245 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.off {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.text {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-faint);
+}
+
+.online {
+  background: var(--green);
+}
+
+.room {
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+}
+
+.empty {
+  padding: 12px 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupHeading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.count {
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  font-size: 10.5px;
+  letter-spacing: 0;
+  color: var(--text-muted);
+}
+
+.search {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  color: var(--text-faint);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.searchInput {
+  padding-left: 30px;
+}
+
+.people {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.personHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.personText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.personName {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.verified {
+  flex: none;
+  color: var(--green);
+}
+
+/* O e-mail, menor, embaixo do nome. */
+.personEmail {
+  overflow: hidden;
+  font-size: 11.5px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+/* Os dispositivos de uma pessoa ficam recuados, sob o nome dela. */
+.person .devices {
+  margin-left: 38px;
+}
+
+.devices {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.device {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 4px 4px 4px 8px;
+  border-radius: var(--radius);
+}
+
+.device:hover {
+  background: var(--surface-muted);
+}
+
+.deviceIcon {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.deviceText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.deviceName {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+/* O e-mail, menor, embaixo do nome do dispositivo. */
+.deviceEmail {
+  overflow: hidden;
+  font-size: 11.5px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+.feedback {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.feedback:empty {
+  display: none;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.success {
+  color: var(--green);
+}
+
+.warning {
+  color: var(--yellow);
+}
+
+.error {
+  color: var(--red);
+}
+
+.deviceAction {
+  flex: none;
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 12.5px;
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}

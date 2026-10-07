@@ -1,0 +1,147 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-strong);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.fieldOption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fieldId {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--red-bg);
+  color: var(--red);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.error svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.actionsHint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* Botão que substitui o "Gerar relatório" depois da primeira geração: mostra
+   o estado da atualização automática e busca o relatório de novo ao clicar. */
+.actions .refreshButton {
+  width: 100%;
+  justify-content: flex-start;
+  background: var(--surface-muted);
+}
+
+.refreshLabel {
+  flex: 1;
+  text-align: left;
+}
+
+.refreshIcon {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.refreshing .refreshIcon {
+  animation: spin 900ms linear infinite;
+}
+
+.autoApplyDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--green);
+}
+
+.pending .autoApplyDot,
+.refreshing .autoApplyDot {
+  background: var(--blue);
+  animation: pulse 900ms ease-in-out infinite;
+}
+
+.invalid .autoApplyDot {
+  background: var(--red);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.jqlDetails {
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.jqlDetails summary {
+  width: fit-content;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.jqlDetails code {
+  display: block;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}

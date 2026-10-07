@@ -1,0 +1,29 @@
+# Proxy de escritas e servidor MCP (/mcp) do team-report: ver README.md.
+name = "team-report-proxy"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+
+# Sem logs de requisição: o cabeçalho Authorization (o token de cada pessoa) passa por aqui.
+[observability]
+enabled = false
+
+[vars]
+# Site do Jira (o mesmo de src/api/jira-config.ts).
+JIRA_CLOUD_ID = "2bc8dd13-1765-447e-910f-36bc5a93fdb1"
+# Endereços do app que podem usar o proxy, separados por vírgula. Na publicação,
+# inclua o endereço do app publicado (ex: "https://reports.exemplo.com.br").
+ALLOWED_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173,https://teamreports.com.br,https://dsvinovacaogp.teamreports.com.br"
+
+[assets]
+directory = "../dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/auth/*", "/mcp", "/mcp/*", "/MCP", "/MCP/*", "/rest/*", "/__tenant_info"]
+
+[[routes]]
+pattern = "teamreports.com.br"
+custom_domain = true
+
+[[routes]]
+pattern = "dsvinovacaogp.teamreports.com.br"
+custom_domain = true

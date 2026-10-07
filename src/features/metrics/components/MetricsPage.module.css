@@ -1,0 +1,77 @@
+.main {
+  gap: 16px;
+}
+
+.notice {
+  flex: none;
+}
+
+/* As linhas do painel seguem a largura dele (não a da janela): com a lateral escondida cabe
+   mais, e a impressão, que sai com a largura da tela, fica igual a ela. */
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  container: metrics / inline-size;
+}
+
+/* "Atualizando…" preso no topo da área que rola: o painel é mais alto que a janela. */
+.refreshing {
+  position: sticky;
+  top: 8px;
+  z-index: 10;
+  height: 48px;
+  margin-bottom: -48px;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: opacity 200ms ease;
+}
+
+.dashboard[data-stale] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.chartsRow {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+/* Cada lista com a altura dela (uma costuma ser bem mais curta). */
+.listsRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
+/* 840 px: a largura do painel numa janela de 1200 px, com a lateral no tamanho padrão. */
+@container metrics (max-width: 840px) {
+  .chartsRow,
+  .listsRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Impressão (ou "Salvar como PDF"): o painel como na tela (o AppShell mantém a largura e as
+   colunas), sem botões nem o aviso de atualização, e sem cortar um cartão entre folhas. */
+@media print {
+  .refreshing {
+    display: none;
+  }
+
+  .dashboard[data-stale] {
+    opacity: 1;
+  }
+
+  .dashboard > *,
+  .chartsRow > *,
+  .listsRow > * {
+    break-inside: avoid;
+  }
+}

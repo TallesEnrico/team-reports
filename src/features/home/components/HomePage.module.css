@@ -1,0 +1,286 @@
+.main {
+  padding: 56px 32px 24px;
+  background-image: radial-gradient(#00337015 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+@media screen {
+  :global([data-theme='dark']) .main {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  }
+}
+
+/* Conteúdo centralizado, com largura de leitura: não fica preso à esquerda nas telas largas. */
+.page {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  gap: 44px;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* ---------- Abertura ---------- */
+
+.introBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Saudação à esquerda; à direita, quem está conectado e o tema, na altura da data. */
+.introRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px 32px;
+}
+
+.introTools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  animation: enter 600ms var(--ease-out) both;
+}
+
+.intro {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  animation: enter 600ms var(--ease-out) both;
+}
+
+.eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.squad {
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--surface);
+  font-size: 10.5px;
+  color: var(--text);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 56px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  color: var(--text-strong);
+}
+
+.leadRow {
+  display: grid;
+  grid-template-columns: minmax(0, 520px) auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 36px;
+  width: 100%;
+}
+
+.lead {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.jiraLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blue);
+}
+
+.jiraLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Ferramentas: grade assimétrica (7 + 5, depois 5 + 7) ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.cell {
+  --dot: var(--blue);
+
+  display: flex;
+  grid-column: span 6;
+  animation: enter 600ms var(--ease-out) both;
+  animation-delay: calc(120ms + var(--index) * 80ms);
+}
+
+.cell:nth-child(4n + 1),
+.cell:nth-child(4n) {
+  grid-column: span 7;
+}
+
+.cell:nth-child(4n + 2),
+.cell:nth-child(4n + 3) {
+  grid-column: span 5;
+}
+
+.cell[data-product='kanban'] {
+  --dot: var(--green);
+}
+
+.cell[data-product='metrics'] {
+  --dot: var(--yellow);
+}
+
+.cell[data-product='builder'] {
+  --dot: var(--red);
+}
+
+.card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms var(--ease-out);
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-card);
+}
+
+.card:active {
+  transform: scale(0.99);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.arrow {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  color: var(--text-muted);
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.arrow svg {
+  transition: transform 200ms var(--ease-out);
+}
+
+.card:hover .arrow,
+.card:focus-visible .arrow {
+  border-color: var(--text-strong);
+  background: var(--text-strong);
+  color: var(--on-strong);
+}
+
+.card:hover .arrow svg {
+  transform: translateX(2px);
+}
+
+.tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--dot);
+}
+
+.description {
+  flex: 1;
+  max-width: 560px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* Tela média: duas colunas iguais. */
+@media (max-width: 1180px) {
+  .cell:nth-child(n) {
+    grid-column: span 6;
+  }
+}
+
+/* Tela estreita: uma coluna. */
+@media (max-width: 760px) {
+  .main {
+    padding: 36px 16px 20px;
+  }
+
+  .cell:nth-child(n) {
+    grid-column: span 12;
+  }
+
+  .title {
+    font-size: 40px;
+  }
+
+  /* Quem está conectado e o tema vão para cima da saudação, alinhados à esquerda. */
+  .introRow {
+    flex-direction: column-reverse;
+  }
+
+  .introTools {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .leadRow {
+    grid-template-columns: 1fr;
+  }
+}

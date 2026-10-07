@@ -1,0 +1,18 @@
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.noneIcon {
+  flex: none;
+  color: var(--text-muted);
+}

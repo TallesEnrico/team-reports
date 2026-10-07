@@ -1,0 +1,16 @@
+.scopes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  list-style: none;
+}
+
+.scopes code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.loadMore {
+  margin-top: 16px;
+}

@@ -1,0 +1,144 @@
+.mono,
+.custom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ramp {
+  display: flex;
+  gap: 2px;
+}
+
+.ramp span {
+  flex: 1;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.ranges {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+}
+
+/* O seletor de cor nativo, como um quadradinho com borda. */
+.color {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 2px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.color::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+.color::-moz-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+.limit {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.until,
+.openLabel {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.openLabel {
+  flex: 1;
+}
+
+.threshold {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.threshold :global(.input) {
+  width: 76px;
+  min-height: 32px;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.unit {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.remove {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  cursor: pointer;
+}
+
+.remove:hover {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 8px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.add:hover {
+  border-style: solid;
+  background: var(--surface-muted);
+}
+
+.warning {
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--yellow-bg);
+  font-size: 12px;
+  color: var(--yellow);
+}

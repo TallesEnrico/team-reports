@@ -1,0 +1,53 @@
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: text;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.field:hover {
+  border-color: var(--border);
+}
+
+.field:focus-within {
+  border-color: var(--text-muted);
+  background: var(--surface);
+}
+
+.input {
+  min-width: 0;
+  max-width: 420px;
+  padding: 2px 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.icon {
+  flex: none;
+  color: var(--text-faint);
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.field:hover .icon,
+.field:focus-within .icon {
+  opacity: 1;
+}

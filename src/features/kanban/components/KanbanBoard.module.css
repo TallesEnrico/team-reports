@@ -1,0 +1,77 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.error {
+  flex: none;
+}
+
+/* Referência do aviso "Atualizando…", que fica sobre a área visível do quadro. */
+.frame {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Como na tabela do Reports: esmaece ao buscar e volta quando os dados chegam. */
+.board {
+  transition: opacity 250ms ease;
+}
+
+.refreshing .board {
+  opacity: 0.4;
+}
+
+/* Rola nos dois sentidos; os cabeçalhos das colunas ficam presos no topo. */
+.board {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-bottom: 8px;
+  overflow: auto;
+  /* Medida da área visível: o cabeçalho das raias ocupa essa largura (100cqw). */
+  container: kanban-board / inline-size;
+  animation: enter 500ms var(--ease-out) both;
+}
+
+/* Fora do contêiner que rola, a altura aqui é a da coluna mais comprida, e
+   `stretch` leva todas as colunas até ela (no mínimo, a área visível). */
+.columns {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  width: max-content;
+  min-height: 100%;
+}
+
+/* Agrupamento por história: raias empilhadas, cada uma com as colunas do quadro. */
+.lanes {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: max-content;
+  min-width: 100%;
+}
+
+/* Embaixo da última raia, preso à esquerda: na largura visível do quadro, como o cabeçalho das raias. */
+.lanesFooter {
+  position: sticky;
+  left: 0;
+  width: 100cqw;
+  padding-bottom: 8px;
+}
+
+.board[data-dragging] {
+  cursor: grabbing;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

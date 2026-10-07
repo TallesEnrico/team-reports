@@ -1,0 +1,84 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Como o rótulo do FormField. */
+.label {
+  padding: 0;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+}
+
+.rowLabel {
+  min-width: 0;
+  font-size: 13px;
+  color: var(--text);
+}
+
+/* Controle compacto, como os de layout `inline` do FormField. */
+.select {
+  width: auto;
+  min-height: 32px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.swatch[data-tone='danger'] {
+  background: var(--red);
+}
+
+.swatch[data-tone='alert'] {
+  background: var(--yellow);
+}
+
+.swatch[data-tone='success'] {
+  background: var(--green);
+}
+
+.swatch[data-tone='over'] {
+  background: var(--blue);
+}
+
+.swatch[data-tone='empty'] {
+  border: 1px solid var(--border-strong);
+  background: var(--border);
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}

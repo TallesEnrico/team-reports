@@ -1,0 +1,542 @@
+/* Moldura: é o item flexível da página e referência para o aviso de carregamento. */
+.frame {
+  position: relative;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 280px;
+  animation: enter 600ms var(--ease-out) both;
+}
+
+.scroller {
+  /* Padrão da coluna de descrição; o usuário pode redimensionar (ver ReportTable.tsx). */
+  --row-header-width: 400px;
+  --total-width: 92px;
+  --band-height: 30px;
+  --total-highlight: #fff0b399;
+  --in-progress-highlight: #228b2211;
+  /* Células presas precisam de fundo opaco: estes tons não vêm de transparência. */
+  --weekend-bg: #faf9f7;
+  --weekend-strong-bg: #f1f0ec;
+  --today-bg: #f0f8fe;
+  --today-strong-bg: #e6f3fc;
+  --group-hover-bg: #f2f1ee;
+
+  /* flex: 1 1 auto; */
+  min-height: 0;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+  /* As camadas da tabela (colunas e divisa presas) ficam abaixo do tooltip e do aviso de carregamento. */
+  isolation: isolate;
+}
+
+@media screen {
+  :global([data-theme='dark']) .scroller {
+    --total-highlight: #4a3d1066;
+    --in-progress-highlight: #3fae5a1a;
+    --weekend-bg: #1f1f1e;
+    --weekend-strong-bg: #151514;
+    --today-bg: #1d2a34;
+    --today-strong-bg: #1a2a37;
+    --group-hover-bg: #141413;
+  }
+}
+
+/* Tabela e trilho da divisa da descrição na mesma célula do grid: o trilho tem
+   a altura da tabela, e o grid tem a largura dela (o trilho preso à esquerda
+   acompanha a rolagem para o lado até o fim da tabela). */
+.canvas {
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+}
+
+.canvas > * {
+  grid-area: 1 / 1;
+}
+
+.table {
+  /* Transição nos dois sentidos: esmaece ao buscar e volta quando os dados chegam. */
+  transition: opacity 250ms ease;
+  width: max-content;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+
+.table th,
+.table td {
+  height: 36px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* ---------- Cabeçalho ---------- */
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: auto;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.table .bandRow th {
+  height: var(--band-height);
+}
+
+.table .periodRow th {
+  top: var(--band-height);
+  height: 46px;
+}
+
+.table .band,
+.table .fieldCell,
+.table .periodCell {
+  border-right: 1px solid var(--border);
+}
+
+.table .band:last-child,
+.table .periodCell:last-child {
+  border-right: none;
+}
+
+/* O nome do mês acompanha o scroll horizontal enquanto houver colunas dele. */
+.band span {
+  position: sticky;
+  left: calc(var(--row-header-width) + var(--total-width) + 10px);
+}
+
+.table .period {
+  min-width: 60px;
+  padding: 6px;
+  text-align: center;
+}
+
+.periodLabel {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.3;
+  color: var(--text-strong);
+}
+
+.periodSub {
+  display: block;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  line-height: 1.3;
+}
+
+.table .today {
+  box-shadow: inset 0 -2px 0 var(--blue);
+}
+
+.today .periodLabel,
+.today .periodSub {
+  color: var(--blue);
+}
+
+.linkButton {
+  margin-left: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.linkButton:hover {
+  color: var(--text);
+}
+
+/* ---------- Colunas fixas ---------- */
+
+.table .stickyLeft {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: var(--row-header-width);
+  min-width: var(--row-header-width);
+  max-width: var(--row-header-width);
+}
+
+.table .stickyTotal {
+  position: sticky;
+  left: var(--row-header-width);
+  z-index: 1;
+  width: var(--total-width);
+  min-width: var(--total-width);
+  border-right: 1px solid var(--border);
+  /* A coluna é sticky e precisa de fundo opaco: o destaque translúcido entra
+     como camada sobre a cor da célula, que muda com hover, grupo e rodapé. */
+  background-image: linear-gradient(var(--total-highlight), var(--total-highlight));
+}
+
+.table thead .stickyLeft,
+.table thead .stickyTotal,
+.table tfoot .stickyLeft,
+.table tfoot .stickyTotal {
+  z-index: 4;
+}
+
+/* ---------- Redimensionar a descrição ---------- */
+
+/* Trilho sem largura, preso à esquerda como a descrição: a divisa dentro dele
+   fica sempre na borda direita dela, acima das células presas. */
+.resizeRail {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  width: 0;
+}
+
+/* Divisa da descrição, da altura da tabela: arrastar em qualquer linha muda a largura. */
+.rowHeaderResizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--row-header-width) - 5px);
+  width: 9px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.rowHeaderResizer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 3px;
+  background-color: transparent;
+  transition: background-color 150ms ease;
+}
+
+.rowHeaderResizer:focus-visible {
+  outline: none;
+}
+
+.rowHeaderResizer:hover::after,
+.rowHeaderResizer:focus-visible::after,
+.rowHeaderResizer[data-active]::after {
+  background-color: var(--blue);
+}
+
+/* Alça na borda direita das outras colunas do cabeçalho. Qualquer uma ajusta só a
+   largura da descrição; fica dentro da célula para não ser coberta pela vizinha. */
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  right: -1px;
+  bottom: 0;
+  z-index: 1;
+  width: 9px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.resizeHandle::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 0;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 9999px;
+  background-color: transparent;
+  transition: background-color 150ms ease;
+}
+
+.resizeHandle:focus-visible {
+  outline: none;
+}
+
+.resizeHandle:hover::after,
+.resizeHandle:focus-visible::after,
+.resizeHandle[data-active]::after {
+  background-color: var(--blue);
+}
+
+/* Com qualquer alça ativa, a borda direita da descrição (a coluna que de fato
+   muda de largura) acende de cima a baixo. */
+.scroller[data-resizing] .table .stickyLeft,
+.scroller:has(.resizeHandle:hover) .table .stickyLeft,
+.scroller:has(.resizeHandle:focus-visible) .table .stickyLeft {
+  box-shadow: inset -2px 0 0 var(--blue);
+}
+
+/* ---------- Linhas ---------- */
+
+.rowHeaderInner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  /* Limite explícito para a célula não crescer com o conteúdo quando a coluna
+     é estreitada (20px = padding horizontal da célula). */
+  max-width: calc(var(--row-header-width) - 20px);
+  overflow: hidden;
+}
+
+/* Issue em andamento: a cor translúcida entra como camada sobre o fundo opaco
+   da célula (coluna sticky), igual ao destaque da coluna Total. */
+.table .inProgress {
+  background-image: linear-gradient(var(--in-progress-highlight), var(--in-progress-highlight));
+}
+
+.childRow .rowHeaderInner {
+  padding-left: 28px;
+}
+
+.table .groupRow > * {
+  background-color: var(--surface-muted);
+}
+
+.table .weekend {
+  background-color: var(--weekend-bg);
+}
+
+.table .groupRow > .weekend {
+  background-color: var(--weekend-strong-bg);
+}
+
+.table .todayCell {
+  background-color: var(--today-bg);
+}
+
+.table tbody tr:hover > * {
+  background-color: var(--surface-hover);
+}
+
+.table .groupRow:hover > * {
+  background-color: var(--group-hover-bg);
+}
+
+.toggle {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.toggle:focus-visible {
+  outline-offset: -2px;
+}
+
+.toggle:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+.toggle svg {
+  transition: transform 200ms var(--ease-out);
+}
+
+.toggle[aria-expanded='true'] svg {
+  transform: rotate(90deg);
+}
+
+.avatar {
+  flex: none;
+  border-radius: 9999px;
+}
+
+.typeIcon {
+  flex: none;
+}
+
+.key {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  /* font-weight: 400; */
+  /* color: var(--blue); */
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.key:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.groupLabel {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.secondary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-muted);
+}
+
+.count {
+  flex: none;
+  margin-left: auto;
+  padding: 0 7px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background-color: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--text-muted);
+}
+
+/* ---------- Células ---------- */
+
+.table .num {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.table .total {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.table .fieldCell {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Célula com apontamentos: o horário é um botão, e o ::after estende a área
+   clicável à célula inteira sem mudar a largura da coluna. */
+.table .clickableCell {
+  position: relative;
+}
+
+.cellButton {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-variant-numeric: inherit;
+  cursor: pointer;
+  text-underline-offset: 3px;
+}
+
+.cellButton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.cellButton:hover {
+  text-decoration: underline;
+}
+
+.cellButton:focus-visible {
+  outline: none;
+}
+
+.cellButton:focus-visible::after {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
+}
+
+.cellPlus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: var(--text-muted);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 150ms ease;
+}
+
+.clickableCell:hover .cellPlus,
+.cellButton:focus-visible .cellPlus {
+  opacity: 1;
+}
+
+/* ---------- Rodapé ---------- */
+
+.table tfoot th,
+.table tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  border-top: 1px solid var(--border-strong);
+  border-bottom: none;
+  background-color: var(--surface-muted);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.table tfoot .weekend {
+  background-color: var(--weekend-strong-bg);
+}
+
+.table tfoot .todayCell {
+  background-color: var(--today-strong-bg);
+}
+
+/* ---------- Estados ---------- */
+
+.refreshing .table {
+  opacity: 0.4;
+}
+
+/* O aviso "Atualizando…" vem de RefreshOverlay (src/components). */
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (max-width: 960px) {
+  .scroller {
+    max-height: 75vh;
+  }
+}
+
+@media (max-width: 720px) {
+  .scroller {
+    --row-header-width: 240px;
+    --total-width: 80px;
+  }
+}

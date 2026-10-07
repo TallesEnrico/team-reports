@@ -1,0 +1,10 @@
+---
+description: "Use when working on peer-to-peer sharing between browsers (src/features/peer-sharing): WebRTC DataChannels via Trystero and public Nostr relays (no backend), the room is the Jira Cloud ID, device presence and grouping, sending dashboards with accept/decline on the receiver, the shareable dashboard link, and the 'Conexões entre dispositivos' settings. Trigger phrases: P2P, WebRTC, DataChannel, Trystero, Nostr, compartilhar, conexões, dispositivos, peer."
+name: "P2P Domain"
+---
+
+<!-- Adapter: a fonte única deste arquivo é ia/instructions/p2p-domain.md. Edite lá, não aqui. Veja ia/README.md. -->
+
+As instruções completas estão em [`ia/instructions/p2p-domain.md`](../../ia/instructions/p2p-domain.md).
+
+Leia esse arquivo por inteiro e aplique-o sempre que a tarefa se encaixar na descrição acima.

@@ -1,0 +1,7 @@
+# Copie para proxy/.dev.vars (esse arquivo é gitignorado). O Worker lê estas
+# variáveis no `wrangler dev`. Em produção: `wrangler secret put` para cada uma.
+# O client_secret nunca vai para o frontend, para o Vite nem para o wrangler.toml.
+
+ATLASSIAN_CLIENT_ID=
+ATLASSIAN_CLIENT_SECRET=
+ATLASSIAN_REDIRECT_URI=http://localhost:5173/auth/atlassian/callback

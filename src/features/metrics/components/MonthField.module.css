@@ -1,0 +1,13 @@
+.field {
+  display: flex;
+  gap: 6px;
+}
+
+.field > button {
+  flex: none;
+}
+
+.select {
+  flex: 1;
+  min-width: 0;
+}

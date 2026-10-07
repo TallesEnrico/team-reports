@@ -1,0 +1,188 @@
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.total {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.total strong {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.withDraft {
+  white-space: pre;
+}
+
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+
+/* ---------- Barra ---------- */
+
+.track {
+  position: relative;
+  height: 30px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.hourLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+
+/* Apontamento já lançado (em qualquer issue). */
+.block {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  min-width: 2px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--blue-bg);
+  box-shadow: inset 0 0 0 1px var(--blue);
+}
+
+.block[data-conflict] {
+  background: var(--red-bg);
+  box-shadow: inset 0 0 0 1px var(--red);
+}
+
+.blockLabel {
+  padding: 0 4px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--blue);
+}
+
+.block[data-conflict] .blockLabel {
+  color: var(--red);
+}
+
+/* O lançamento novo: tracejado, por cima dos que já existem. */
+.draft {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  z-index: 1;
+  min-width: 2px;
+  border: 2px dashed var(--green);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--green-bg) 70%, transparent);
+}
+
+.draft[data-conflict] {
+  border-color: var(--red);
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--red-bg) 85%, transparent) 0 4px,
+    color-mix(in srgb, var(--red) 18%, transparent) 4px 8px
+  );
+}
+
+/* Só o início preenchido: uma marca no horário. */
+.marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--text-strong);
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+/* ---------- Eixo ---------- */
+
+.axis {
+  position: relative;
+  height: 14px;
+}
+
+.axis span {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+  transform: translateX(-50%);
+}
+
+/* ---------- Mensagem ---------- */
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+}
+
+.message svg {
+  flex: none;
+}
+
+.message[data-tone='conflict'] {
+  color: var(--red);
+}
+
+.message[data-tone='free'] {
+  color: var(--green);
+}
+
+.message[data-tone='muted'] {
+  color: var(--text-muted);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

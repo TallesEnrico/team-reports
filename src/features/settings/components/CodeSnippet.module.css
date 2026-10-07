@@ -1,0 +1,61 @@
+.snippet {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 4px 4px 4px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.target {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 2px;
+}
+
+.action {
+  min-height: 28px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.actions .action:hover:not(:disabled) {
+  background: var(--border);
+}
+
+/* Linhas longas (o comando do Claude, o header) quebram em vez de rolar para o lado. */
+.code {
+  margin: 0;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+
+.failed {
+  padding: 0 12px 10px;
+  font-size: 12px;
+  color: var(--red);
+}

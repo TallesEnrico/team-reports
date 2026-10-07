@@ -1,0 +1,25 @@
+.link {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--blue);
+}
+
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.link img {
+  flex: none;
+}
+
+/* Concluída: chave riscada, como nos cards do Kanban. */
+.done {
+  text-decoration: line-through;
+}

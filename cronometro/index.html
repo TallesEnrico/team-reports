@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cronômetro</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="manifest" href="/cronometro/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/stopwatch-192.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Cronômetro" />
+    <script>
+      (function () {
+        var preference = 'light';
+        try {
+          preference = JSON.parse(localStorage.getItem('team-report:theme')).state.preference || 'light';
+        } catch (error) {}
+        var dark = preference === 'dark' || (preference === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        var domain = (new URLSearchParams(location.search).get('domain') || '').toLowerCase();
+        if (!/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(domain)) return;
+        var icon = '/cronometro/favicon?domain=' + encodeURIComponent(domain) + '&size=192';
+        var manifest = document.querySelector('link[rel="manifest"]');
+        if (manifest) manifest.href = '/cronometro/manifest.webmanifest?domain=' + encodeURIComponent(domain);
+        var favicon = document.querySelector('link[rel="icon"]');
+        if (favicon) favicon.href = icon;
+        var apple = document.querySelector('link[rel="apple-touch-icon"]');
+        if (apple) apple.href = icon;
+      })();
+    </script>
+    <script>
+      window.addEventListener('beforeinstallprompt', function (event) {
+        event.preventDefault();
+        window.__stopwatchInstall = event;
+        window.dispatchEvent(new Event('stopwatch-install-available'));
+      });
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

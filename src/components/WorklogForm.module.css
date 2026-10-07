@@ -1,0 +1,107 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.timeRow {
+  display: grid;
+  grid-template-columns: minmax(140px, 1.4fr) repeat(2, minmax(96px, 1fr)) auto;
+  align-items: start;
+  gap: 10px;
+}
+
+.closeOnSuccess {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.closeOnSuccess input {
+  color: var(--text-strong);
+  accent-color: var(--text-strong);
+}
+
+.duration {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 72px;
+}
+
+.durationLabel {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Mesma altura dos campos, para o valor ficar na linha deles. */
+.durationValue {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-strong);
+}
+
+.hint {
+  margin-top: -6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* O `textarea.input` global é monoespaçado (feito para JQL); descrição é texto corrido. */
+.comment {
+  min-height: 96px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: var(--red-bg);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--red);
+}
+
+.error svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@media (max-width: 560px) {
+  .timeRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .timeRow > :first-child {
+    grid-column: 1 / -1;
+  }
+}

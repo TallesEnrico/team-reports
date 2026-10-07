@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script>
+      // Tema salvo (useThemeStore) aplicado antes do primeiro quadro: a página não pisca no claro.
+      (function () {
+        var preference = 'light';
+        try {
+          preference = JSON.parse(localStorage.getItem('team-report:theme')).state.preference || 'light';
+        } catch (error) {}
+        var dark = preference === 'dark' || (preference === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+  min-width: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.key {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+}
+
+.usage::before,
+.rejected::before {
+  content: '·';
+  margin-right: 8px;
+  color: var(--text-faint);
+}
+
+.rejected {
+  color: var(--red);
+}

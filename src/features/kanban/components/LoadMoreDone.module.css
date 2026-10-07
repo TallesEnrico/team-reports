@@ -1,0 +1,41 @@
+.loadMore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 0;
+}
+
+.loadMore[data-layout='inline'] {
+  flex-direction: row;
+  gap: 12px;
+  padding: 0;
+}
+
+.shown {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.button {
+  min-height: 32px;
+  font-size: 13px;
+}
+
+.button[aria-disabled] {
+  cursor: progress;
+}
+
+.spinning {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

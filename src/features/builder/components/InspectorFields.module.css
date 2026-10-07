@@ -1,0 +1,147 @@
+.dates {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.apply {
+  align-self: flex-start;
+  min-height: 30px;
+  margin-top: 6px;
+  font-size: 12.5px;
+}
+
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.row > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.swap {
+  width: 36px;
+  flex: none;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.checkbox input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--text-strong);
+}
+
+.checkbox[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ---------- Valores do Filtrar ---------- */
+
+.values {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.valuesTools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.linkButton {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--blue);
+  cursor: pointer;
+}
+
+.linkButton:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.valueList {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.valueItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.valueItem:last-child {
+  border-bottom: none;
+}
+
+.valueItem:hover {
+  background: var(--surface-hover);
+}
+
+.valueItem input {
+  flex: none;
+  accent-color: var(--text-strong);
+}
+
+.valueLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valueCount {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.emptyValues {
+  padding: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ---------- Pessoas ---------- */
+
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.personName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

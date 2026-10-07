@@ -1,0 +1,264 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-hover);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.titleIcon {
+  color: var(--blue);
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+.small {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.text {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.muted {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  font-size: 13px;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.spinner {
+  flex: none;
+  color: var(--blue);
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color 150ms ease;
+}
+
+.card:hover,
+.card[data-open] {
+  border-color: var(--border-strong);
+}
+
+.card[data-error] {
+  border-color: var(--red);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-right: 6px;
+}
+
+/* O título inteiro é o botão do accordion. */
+.toggle {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 11px 6px 11px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--text-muted);
+  outline-offset: -2px;
+  border-radius: var(--radius);
+}
+
+.caret {
+  flex: none;
+  color: var(--text-muted);
+  transition: transform 200ms var(--ease-out);
+}
+
+.toggle[aria-expanded='true'] .caret {
+  transform: rotate(90deg);
+}
+
+.cardSummary {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+.cardMeta {
+  flex: none;
+  max-width: 40%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.discard {
+  width: 28px;
+  min-height: 28px;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.createdRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--green-bg);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--green);
+}
+
+.createdRow strong {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.createdIcon {
+  flex: none;
+  margin-top: 2px;
+}
+
+.skipped {
+  color: var(--yellow);
+}
+
+.request {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.requestActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.privacy svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+@media (max-width: 520px) {
+  .cardMeta {
+    display: none;
+  }
+}

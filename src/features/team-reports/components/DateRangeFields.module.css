@@ -1,0 +1,57 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Lateral estreita (redimensionada): as duas datas empilham para caber. */
+@container sidebar (max-width: 270px) {
+  .inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.inputs input {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preset {
+  padding: 2px 10px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--surface);
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.preset:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.presetActive {
+  border-color: var(--text-strong);
+  background: var(--text-strong);
+  color: var(--on-strong);
+}
+
+.presetActive:hover {
+  color: var(--on-strong);
+}

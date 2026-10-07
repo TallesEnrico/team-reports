@@ -1,0 +1,10 @@
+---
+description: "Use when working on the Team Reports MCP server (proxy/src/mcp: Streamable HTTP at /mcp on the Cloudflare Worker, tools criar_subtarefa, ler_historia, buscar_issues, ler_worklogs, lancar_horas, mudar_status, Authorization header with the Jira token) or on the Settings page (/#/settings: Meu cliente / account squad, MCP install buttons for Codex, Cursor, Antigravity, Claude and Copilot, JSON config). Trigger phrases: MCP, servidor MCP, Configurações, settings, instalar MCP, meu cliente, squad da conta."
+name: "MCP Domain"
+---
+
+<!-- Adapter: a fonte única deste arquivo é ia/instructions/mcp-domain.md. Edite lá, não aqui. Veja ia/README.md. -->
+
+As instruções completas estão em [`ia/instructions/mcp-domain.md`](../../ia/instructions/mcp-domain.md).
+
+Leia esse arquivo por inteiro e aplique-o sempre que a tarefa se encaixar na descrição acima.

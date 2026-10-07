@@ -1,0 +1,53 @@
+.main {
+  gap: 16px;
+}
+
+/* Montagem: o quadro ocupa a altura que sobra, sem a página rolar. */
+.mainBuild {
+  gap: 12px;
+  overflow: hidden !important;
+}
+
+.notice {
+  flex: none;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Resultado da importação, com o "×" para fechar. */
+.feedback {
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.feedbackNotice {
+  flex: 1;
+}
+
+.feedbackAction {
+  min-height: 32px;
+}
+
+.feedbackClose {
+  width: 32px;
+  min-height: 32px;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 960px) {
+  .mainBuild {
+    overflow: visible !important;
+  }
+}

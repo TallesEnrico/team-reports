@@ -1,0 +1,71 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 72px 24px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-align: center;
+  animation: enter 600ms var(--ease-out) both;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 4px;
+  border-radius: 9999px;
+  background: var(--surface-muted);
+  color: var(--text-muted);
+}
+
+.error {
+  border-style: solid;
+  border-color: var(--red-bg);
+}
+
+.error .icon {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+
+.body {
+  max-width: 560px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.body ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loading .icon svg {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

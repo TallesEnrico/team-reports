@@ -1,0 +1,126 @@
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.heading {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.hint {
+  margin-top: -6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.category {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item {
+  --cat-bg: var(--blue-bg);
+  --cat-ink: var(--blue);
+
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: left;
+  cursor: grab;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 150ms var(--ease-out);
+}
+
+.item[data-category='transform'] {
+  --cat-bg: var(--yellow-bg);
+  --cat-ink: var(--yellow);
+}
+
+.item[data-category='visual'] {
+  --cat-bg: var(--green-bg);
+  --cat-ink: var(--green);
+}
+
+.item:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+}
+
+.item:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  background: var(--cat-bg);
+  color: var(--cat-ink);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.description {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.grip {
+  flex: none;
+  align-self: center;
+  color: var(--text-faint);
+}
+
+/* Lateral estreita: só o nome, sem a descrição. */
+@container sidebar (max-width: 280px) {
+  .description {
+    display: none;
+  }
+}

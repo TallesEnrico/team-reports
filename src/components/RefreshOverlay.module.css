@@ -1,0 +1,42 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  /* O conteúdo continua rolável por baixo do aviso. */
+  pointer-events: none;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  font-size: 13px;
+  color: var(--text);
+  /* Só aparece se a busca passar de 150ms, para não piscar em respostas rápidas. */
+  animation: loading-in 200ms var(--ease-out) 150ms both;
+}
+
+.spinner {
+  color: var(--text-muted);
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes loading-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,40 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.inline .label {
+  white-space: nowrap;
+}
+
+/* Controle compacto: largura pelo conteúdo e altura menor que a dos formulários. */
+.inline :global(.input) {
+  width: auto;
+  min-height: 32px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  font-size: 13px;
+}

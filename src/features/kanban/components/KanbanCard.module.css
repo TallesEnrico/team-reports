@@ -1,0 +1,144 @@
+.handle {
+  display: block;
+  border-radius: var(--radius);
+  cursor: pointer;
+  /* O PointerSensor do dnd-kit precisa disso para o arrasto no toque. */
+  touch-action: manipulation;
+}
+
+.handle:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.draggable {
+  cursor: grab;
+}
+
+/* Lugar de origem enquanto a cópia acompanha o mouse. */
+.placeholder {
+  opacity: 0.35;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition:
+    border-color 150ms ease,
+    box-shadow 200ms ease;
+}
+
+/* Acima da estimativa: faixa vermelha na borda esquerda (o padding compensa a borda mais grossa). */
+.card[data-over-estimate] {
+  border-left: 3px solid var(--red);
+  padding-left: 10px;
+}
+
+.handle:hover .card {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-card);
+}
+
+.overlay {
+  border-color: var(--border-strong);
+  box-shadow: 0 12px 28px rgba(17, 17, 17, 0.1);
+  transform: rotate(2deg);
+  cursor: grabbing;
+}
+
+.summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: 13.5px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+
+.status {
+  display: flex;
+  min-width: 0;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.time svg {
+  color: var(--text-muted);
+}
+
+.estimate {
+  color: var(--text-muted);
+}
+
+.overTime,
+.overTime svg,
+.overTime .estimate {
+  color: var(--red);
+}
+
+.overBadge {
+  flex: none;
+  padding: 0 6px;
+  border-radius: 9999px;
+  background: var(--red-bg);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--red);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.keyGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.key {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Concluída: chave riscada, como no quadro do Jira. */
+.done {
+  text-decoration: line-through;
+}
+
+.meta {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.unassigned {
+  width: 24px;
+  height: 24px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 9999px;
+}

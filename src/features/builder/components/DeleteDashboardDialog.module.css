@@ -1,0 +1,27 @@
+.title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+
+.text {
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.danger {
+  background: var(--red) !important;
+}
+
+.danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--red) 85%, var(--text-strong)) !important;
+}

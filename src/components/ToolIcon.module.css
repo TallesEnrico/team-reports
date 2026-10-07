@@ -1,0 +1,49 @@
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border-radius: var(--radius);
+}
+
+.small {
+  width: 30px;
+  height: 30px;
+}
+
+.medium {
+  width: 34px;
+  height: 34px;
+}
+
+.large {
+  width: 44px;
+  height: 44px;
+}
+
+.icon[data-product='home'],
+.icon[data-product='settings'] {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.icon[data-product='reports'] {
+  background: var(--blue-bg);
+  color: var(--blue);
+}
+
+/* A planilha é uma visualização do Kanban: mesma cor. */
+.icon[data-product='kanban'],
+.icon[data-product='spreadsheet'] {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.icon[data-product='metrics'] {
+  background: var(--yellow-bg);
+  color: var(--yellow);
+}
+
+.icon[data-product='builder'] {
+  background: var(--red-bg);
+  color: var(--red);
+}

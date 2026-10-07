@@ -1,0 +1,181 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+/* Na prévia do painel, sem moldura: o painel já é o cartão. */
+.card[data-variant='preview'] {
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+
+/* No Número, o título é uma etiqueta acima do valor. */
+.card[data-kind='number'] .title {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text);
+}
+
+.icon {
+  flex: none;
+  color: var(--text-faint);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* Texto corrido: quebrando a linha, o "·" fica no fim da anterior, nunca sozinho no começo. */
+.meta span + span::before {
+  content: ' · ';
+  color: var(--text-faint);
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.toggle {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+}
+
+.toggle button {
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.toggle button:hover {
+  color: var(--text);
+}
+
+.toggle button[aria-pressed='true'] {
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+/* O lápis aparece com o mouse no bloco ou com o foco (teclado). */
+.edit {
+  width: 28px;
+  min-height: 28px;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.card:hover .edit,
+.edit:focus-visible {
+  opacity: 1;
+}
+
+.note {
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  background: var(--yellow-bg);
+  font-size: 12px;
+  color: var(--yellow);
+}
+
+.body {
+  min-width: 0;
+  transition: opacity 200ms ease;
+}
+
+/* Números da busca anterior, enquanto a nova não chega. */
+.card[data-stale] .body {
+  opacity: 0.45;
+}
+
+.updating {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  margin-right: 2px;
+  color: var(--text-muted);
+}
+
+/* O Número fica embaixo, alinhado com os vizinhos da mesma linha. */
+.card[data-kind='number'] {
+  justify-content: space-between;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.error {
+  color: var(--red);
+}
+
+.spinning {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media print {
+  .actions {
+    display: none;
+  }
+}

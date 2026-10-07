@@ -1,0 +1,27 @@
+.tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  /* max-content: a largura não depende de onde o tooltip estava antes de ser posicionado. */
+  width: max-content;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 8px 12px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-popover);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text);
+  /* O mouse passa por cima sem tirar o hover de quem abriu o tooltip. */
+  pointer-events: none;
+  animation: tooltip-in 140ms var(--ease-out) both;
+}
+
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+}

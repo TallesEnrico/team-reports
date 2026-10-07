@@ -1,0 +1,11 @@
+.summary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--text-faint);
+}

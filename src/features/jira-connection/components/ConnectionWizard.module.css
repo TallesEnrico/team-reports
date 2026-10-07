@@ -1,0 +1,267 @@
+/* O preflight do Tailwind zera margens; `margin: auto` devolve a centralização nativa do <dialog>. */
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-modal);
+  overflow: hidden;
+  animation: dialog-in 400ms var(--ease-out) both;
+}
+
+/* No passo da squad o menu do seletor abre para fora do diálogo. */
+.dialogOpenMenu {
+  overflow: visible;
+  max-height: none;
+}
+/* A tela do relatório aparece ao fundo, escurecida. */
+.dialog::backdrop {
+  background: var(--backdrop-strong, rgba(17, 17, 17, 0.45));
+  backdrop-filter: blur(2px);
+  animation: backdrop-in 300ms ease both;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: calc(100vh - 32px);
+  min-height: 0;
+  padding: 24px 28px;
+}
+
+.card > :not(.body) {
+  flex: 0 0 auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.logo {
+  margin-bottom: 8px;
+  align-self: flex-start;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--text-strong);
+}
+
+.subtitle,
+.text {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.resolving {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 72px;
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.spinner {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dialogOpenMenu .card,
+.dialogOpenMenu .body {
+  max-height: none;
+  overflow: visible;
+}
+
+.scopeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: -6px;
+}
+
+.scope {
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text);
+}
+
+.externalLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blue);
+  text-decoration: none;
+  transition: border-color 150ms ease;
+}
+
+.externalLink:hover {
+  border-color: var(--border-strong);
+}
+
+.tenantLink {
+  max-width: 100%;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.45;
+  word-break: break-all;
+}
+
+.tenantPattern {
+  margin: 0;
+}
+
+.oauthButton {
+  width: 100%;
+}
+
+.or {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.monoInput {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.secretField {
+  position: relative;
+}
+
+.secretField :global(.input) {
+  padding-right: 40px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.reveal {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.reveal:hover {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--green-bg);
+  font-size: 13px;
+  color: var(--green);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--red-bg);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--red);
+}
+
+.error svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.inlineButton {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
