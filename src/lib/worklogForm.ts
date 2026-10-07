@@ -32,6 +32,59 @@ function minutesOfDay(time: string): number | null {
   return match ? Number(match[1]) * 60 + Number(match[2]) : null;
 }
 
+const SPENT_PATTERN = /^(\d+(?:[.,]\d+)?\s*[hm]\s*)+$/i;
+
+/** "2h 30m", "2h" ou "29m", em segundos. `null` se não for uma duração. */
+export function parseSpentDuration(value: string): number | null {
+  const trimmed = value.trim();
+  if (!trimmed || !SPENT_PATTERN.test(trimmed)) return null;
+  let seconds = 0;
+  for (const match of trimmed.matchAll(/(\d+(?:[.,]\d+)?)\s*([hm])/gi)) {
+    const amount = Number(match[1].replace(',', '.'));
+    if (!Number.isFinite(amount)) return null;
+    seconds += (match[2].toLowerCase() === 'h' ? 3600 : 60) * amount;
+  }
+  return Math.round(seconds);
+}
+
+/** Texto canônico da duração, ou o erro de formato. `null` se o campo estiver vazio. */
+export function checkSpentDuration(value: string): { text: string; seconds: number } | { error: string } | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (!/[hm]$/i.test(trimmed)) return { error: 'A duração deve terminar com h ou m, ex: 1h 10m ou 29m.' };
+  const seconds = parseSpentDuration(trimmed);
+  if (seconds === null) return { error: 'Informe a duração, ex: 2h 30m ou 29m.' };
+  if (seconds <= 0) return { error: 'Informe uma duração maior que zero, ex: 2h 30m ou 29m.' };
+  return { text: formatSpentDuration(seconds), seconds };
+}
+
+/** Duração em segundos no formato do campo ("2h 30m", "29m"). */
+export function formatSpentDuration(seconds: number): string {
+  const totalMinutes = Math.round(seconds / 60);
+  if (totalMinutes <= 0) return '';
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours === 0) return `${minutes}m`;
+  if (minutes === 0) return `${hours}h`;
+  return `${hours}h ${minutes}m`;
+}
+
+/** Hora de fim (HH:mm) somando a duração ao início, no mesmo dia. `null` se passar da meia-noite. */
+export function endTimeAfter(start: string, seconds: number): string | null {
+  const startMinutes = minutesOfDay(start);
+  if (startMinutes === null || seconds <= 0) return null;
+  const total = startMinutes + Math.round(seconds / 60);
+  if (total >= 24 * 60) return null;
+  const hours = Math.floor(total / 60);
+  const minutes = total % 60;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
+/** Horário atual (HH:mm) no fuso do lançamento. */
+export function currentTimeValue(timeZone: string): string {
+  return formatTimeInTimeZone(new Date(), timeZone);
+}
+
 /** Duração entre início e fim, em segundos; `null` se algum horário estiver incompleto. */
 export function formDurationSeconds(values: Pick<WorklogFormValues, 'start' | 'end'>): number | null {
   const start = minutesOfDay(values.start);

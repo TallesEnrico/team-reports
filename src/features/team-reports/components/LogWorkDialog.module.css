@@ -218,13 +218,60 @@
   font-size: 13px;
 }
 
-/* Título inteiro, quebrando linha (sem reticências, ao contrário da lista). */
+.summaryRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+}
+
 .selectedSummary {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.45;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--text-strong);
+}
+
+.summaryToggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-top: -1px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.summaryToggle:hover {
+  background: var(--surface-hover);
+  color: var(--text-strong);
+}
+
+.summaryToggle:hover .caret {
+  color: var(--text-strong);
+}
+
+.summaryToggle[aria-expanded='true'] .caret {
+  transform: rotate(90deg);
+}
+
+.selectedSummaryExpanded {
+  overflow: visible;
+  text-overflow: unset;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.summaryTooltip {
+  overflow-wrap: anywhere;
 }
 
 /* Lançado, estimativa e restante da tarefa escolhida (o mesmo do modal da issue, menor). */

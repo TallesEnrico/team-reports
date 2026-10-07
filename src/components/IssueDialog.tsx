@@ -470,6 +470,7 @@ export function IssueDialog({ issue, timeZone, onOpenIssue, onClose }: IssueDial
         {isLogging && (
           <div className={styles.logForm}>
             <WorklogForm
+              withFillMode
               closeOnSuccess={closeOnSuccess}
               setCloseOnSuccess={setCloseOnSuccess}
               initialValues={emptyWorklogFormValues(timeZone)}

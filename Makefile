@@ -7,7 +7,7 @@ run:
 
 deploy:
 	VITE_JIRA_WRITE_PROXY_URL=$(PUBLIC_ORIGIN) bun run build
-	bun x wrangler deploy --config proxy/wrangler.toml
+	bun run --cwd proxy deploy
 
 --noproxy:
 	@:

@@ -7,6 +7,8 @@ import { useIssueDetailsQuery } from '../../../api/useIssueDetailsQuery';
 import { useJiraWriteAccess } from '../../../api/useJiraWriteAccessQuery';
 import { describeLogWorkError, useLogWorkMutation } from '../../../api/useLogWorkMutation';
 import { Button } from '../../../components/Button';
+import { TooltipPanel } from '../../../components/TooltipPanel';
+import { useHoverTooltip } from '../../../hooks/useHoverTooltip';
 import { DayTimeline } from '../../../components/DayTimeline';
 import { FormField } from '../../../components/FormField';
 import { Modal } from '../../../components/Modal';
@@ -16,6 +18,7 @@ import { StatusPicker } from '../../../components/StatusPicker';
 import { TimeTracking } from '../../../components/TimeTracking';
 import { WorklogForm } from '../../../components/WorklogForm';
 import { type DateKey, formatDateBR, toDateKeyInTimeZone } from '../../../lib/dates';
+import { cx } from '../../../lib/cx';
 import { formatDuration } from '../../../lib/formatDuration';
 import type { ReportTimeZone } from '../../../lib/timeZones';
 import { buildNewWorklog, emptyWorklogFormValues, formDurationSeconds } from '../../../lib/worklogForm';
@@ -85,8 +88,12 @@ export function LogWorkDialog({
 }: LogWorkDialogProps) {
   const titleId = useId();
   const searchId = useId();
+  const summaryTooltipId = useId();
+  const summaryTooltip = useHoverTooltip<string>({ openDelayMs: 200 });
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
   const closeOnSuccess = useLogWorkSettingsStore((state) => state.closeOnSuccess);
   const setCloseOnSuccess = useLogWorkSettingsStore((state) => state.setCloseOnSuccess);
+  const fillMode = useLogWorkSettingsStore((state) => state.fillMode);
   const { canWrite, isReadOnly } = useJiraWriteAccess();
   const logWork = useLogWorkMutation();
   const [term, setTerm] = useState('');
@@ -116,8 +123,13 @@ export function LogWorkDialog({
   }, [isPicking]);
   useEffect(() => {
     if (isPicking || isReadOnly || !form.date) return;
-    document.getElementById(titleId)?.closest('dialog')?.querySelector<HTMLInputElement>('input[type="time"]')?.focus();
-  }, [isPicking, isReadOnly, form.date, form.key, titleId]);
+    const dialog = document.getElementById(titleId)?.closest('dialog');
+    const target =
+      fillMode === 'duration'
+        ? dialog?.querySelector<HTMLInputElement>('[data-worklog-duration]')
+        : dialog?.querySelector<HTMLInputElement>('input[type="time"]');
+    target?.focus();
+  }, [isPicking, isReadOnly, form.date, form.key, titleId, fillMode]);
   const search = useIssuesToLogQuery(term, isPicking);
   const isSearching = term.trim() !== '';
   const issues = search.data?.issues ?? [];
@@ -140,7 +152,14 @@ export function LogWorkDialog({
     setLogged(null);
     setForm((current) => ({ key: current.key + 1, date: initialDate ? current.date : null, prefill: false }));
     setDraftSeconds(null);
+    setSummaryExpanded(false);
+    summaryTooltip.hide();
     setSelected(issue);
+  }
+
+  function toggleSummary() {
+    summaryTooltip.hide();
+    setSummaryExpanded((expanded) => !expanded);
   }
 
   async function handleSubmit(issue: JiraIssue, input: WorklogInput | null) {
@@ -205,8 +224,33 @@ export function LogWorkDialog({
               Trocar
             </Button>
           </div>
-          {/* Título inteiro (na lista ele é cortado). */}
-          <p className={styles.selectedSummary}>{selected.summary}</p>
+          <div className={styles.summaryRow}>
+            <p
+              className={cx(styles.selectedSummary, summaryExpanded && styles.selectedSummaryExpanded)}
+              aria-describedby={!summaryExpanded && summaryTooltip.target ? summaryTooltipId : undefined}
+              onPointerEnter={(event) => {
+                if (summaryExpanded || event.pointerType === 'touch') return;
+                summaryTooltip.show(event.currentTarget, selected.summary);
+              }}
+              onPointerLeave={summaryTooltip.hide}
+            >
+              {selected.summary}
+            </p>
+            <button
+              type="button"
+              className={styles.summaryToggle}
+              aria-expanded={summaryExpanded}
+              aria-label={summaryExpanded ? 'Recolher o título' : 'Mostrar o título inteiro'}
+              onClick={toggleSummary}
+            >
+              <CaretRight size={12} weight="bold" className={styles.caret} aria-hidden />
+            </button>
+          </div>
+          {!summaryExpanded && summaryTooltip.target && (
+            <TooltipPanel anchor={summaryTooltip.target.anchor} id={summaryTooltipId} placement="bottom" className={styles.summaryTooltip}>
+              {summaryTooltip.target.data}
+            </TooltipPanel>
+          )}
           {/* Como no modal da issue; os detalhes (buscados ao escolher) trazem os números mais recentes. */}
           <TimeTracking
             size="compact"
@@ -247,6 +291,7 @@ export function LogWorkDialog({
           ))}
         {logged && <Notice tone="success">{logged}</Notice>}
         <WorklogForm
+          withFillMode
           closeOnSuccess={closeOnSuccess}
           setCloseOnSuccess={setCloseOnSuccess}
           key={form.key}

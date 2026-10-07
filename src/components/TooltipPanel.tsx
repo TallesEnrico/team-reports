@@ -29,6 +29,7 @@ export function TooltipPanel({ anchor, id, placement = 'top', className, childre
   useLayoutEffect(() => {
     const tooltip = ref.current;
     if (!tooltip) return;
+    if (!tooltip.matches(':popover-open')) tooltip.showPopover();
     const target = anchor.getBoundingClientRect();
     const { width, height } = tooltip.getBoundingClientRect();
 
@@ -45,7 +46,7 @@ export function TooltipPanel({ anchor, id, placement = 'top', className, childre
   });
 
   return createPortal(
-    <div ref={ref} id={id} role="tooltip" className={cx(styles.tooltip, className)}>
+    <div ref={ref} id={id} role="tooltip" popover="manual" className={cx(styles.tooltip, className)}>
       {children}
     </div>,
     document.body,

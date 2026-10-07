@@ -1,7 +1,11 @@
 .tooltip {
   position: fixed;
+  inset: auto;
   top: 0;
   left: 0;
+  height: auto;
+  margin: 0;
+  overflow: visible;
   z-index: 50;
   /* max-content: a largura não depende de onde o tooltip estava antes de ser posicionado. */
   width: max-content;
