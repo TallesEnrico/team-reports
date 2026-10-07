@@ -50,6 +50,12 @@
   color: var(--blue);
 }
 
+.value[data-tone='danger'],
+.metric:hover .value[data-tone='danger'],
+.metric:focus-within .value[data-tone='danger'] {
+  color: var(--red);
+}
+
 .label {
   max-width: 108px;
   font-family: var(--font-mono);

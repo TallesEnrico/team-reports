@@ -41,6 +41,7 @@ export function HomeMetrics({ accountId, timeZone, onOpenIssue, hrefFor }: HomeM
         failed={shortDays.isError}
         singular="dia abaixo de 3h"
         plural="dias abaixo de 3h"
+        danger={(shortDays.data?.length ?? 0) > 0}
       >
         <DayList days={shortDays.data} today={today} pending={shortDays.isPending} failed={shortDays.isError} />
       </CountMetric>
@@ -53,6 +54,7 @@ export function HomeMetrics({ accountId, timeZone, onOpenIssue, hrefFor }: HomeM
         failed={inProgress.isError}
         singular="em andamento"
         plural="em andamento"
+        danger={inProgressIssues.length > 1}
       >
         <IssueList
           issues={inProgressIssues}
@@ -101,6 +103,7 @@ function CountMetric({
   failed,
   singular,
   plural,
+  danger = false,
   children,
 }: {
   open: boolean;
@@ -111,6 +114,7 @@ function CountMetric({
   failed: boolean;
   singular: string;
   plural: string;
+  danger?: boolean;
   children: ReactNode;
 }) {
   const panelId = useId();
@@ -168,7 +172,9 @@ function CountMetric({
           else onOpen();
         }}
       >
-        <span className={styles.value}>{value}</span>
+        <span className={styles.value} data-tone={!failed && !pending && danger ? 'danger' : undefined}>
+          {value}
+        </span>
         <span className={styles.label}>{label}</span>
       </button>
       <div id={panelId} className={styles.panel} hidden={!open}>
