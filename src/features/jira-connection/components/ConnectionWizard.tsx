@@ -12,7 +12,8 @@ import { useSquadsQuery } from '../api/useSquadsQuery';
 import { useVerifyCredentialsMutation } from '../api/useVerifyCredentialsMutation';
 import { startAtlassianLogin } from '../lib/atlassianOAuth';
 import { fetchTenantCloudId } from '../lib/fetchTenantCloudId';
-import { loadOAuthPending, type OAuthPending } from '../lib/oauthPending';
+import { type OAuthPending } from '../lib/oauthPending';
+import { loadUsableOAuthPending } from '../lib/refreshAtlassianAccess';
 import { readSiteDomain } from '../lib/siteHint';
 import { parseSiteShare } from '../lib/siteShare';
 import { normalizeJiraDomain, parseCloudId, tenantInfoUrl, validateJiraSite } from '../lib/validateJiraSite';
@@ -112,6 +113,7 @@ export function ConnectionWizard({ onConnected, notice, reconnect, onCancel }: C
           cloudId: oauthSite.cloudId,
           authMethod: 'oauth',
           expiresAt: oauthPending.expiresAt,
+          refreshToken: oauthPending.refreshToken,
         }
       : null;
   const squadsQuery = useSquadsQuery(oauthSignIn ?? (verifiedUser ? manualSignIn : null));
@@ -170,7 +172,7 @@ export function ConnectionWizard({ onConnected, notice, reconnect, onCancel }: C
   useEffect(() => {
     if (reconnect) return;
     let cancelled = false;
-    void loadOAuthPending()
+    void loadUsableOAuthPending()
       .then((pending) => {
         if (cancelled) return;
         if (pending) {
@@ -277,6 +279,7 @@ export function ConnectionWizard({ onConnected, notice, reconnect, onCancel }: C
               domain: oauthSite.domain,
               authMethod: 'oauth',
               expiresAt: oauthPending.expiresAt,
+              refreshToken: oauthPending.refreshToken,
             }
           : { ...manualSignIn, domain: siteDomain, squad: squad.value, authMethod: 'basic' };
       await connect(connection);

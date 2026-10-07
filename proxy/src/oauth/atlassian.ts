@@ -17,6 +17,7 @@ const SCOPES = [
   'read:project:jira',
   'read:board-scope:jira-software',
   'read:board-scope.admin:jira-software',
+  'offline_access',
 ];
 
 interface OAuthConfig {
@@ -41,10 +42,17 @@ interface CookiePayload {
 
 interface SealBody {
   t: string;
+  r: string;
   x: number;
   e: number;
   o: string;
   s: { id: string; url: string; name: string }[];
+}
+
+interface TokenGrant {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
 }
 
 interface AccessibleResource {
@@ -61,6 +69,7 @@ export function isAtlassianAuthPath(pathname: string): boolean {
     pathname === '/auth/atlassian/start' ||
     pathname === '/auth/atlassian/callback' ||
     pathname === '/auth/atlassian/handoff' ||
+    pathname === '/auth/atlassian/refresh' ||
     pathname === '/auth/atlassian/logout'
   );
 }
@@ -122,7 +131,8 @@ function cookiePayload(value: unknown): CookiePayload | null {
 function sealBody(value: unknown): SealBody | null {
   if (!value || typeof value !== 'object') return null;
   const record = value as Record<string, unknown>;
-  if (typeof record.t !== 'string' || record.t.length < 20 || record.t.length > 8192) return null;
+  if (typeof record.t !== 'string' || !isOpaqueToken(record.t)) return null;
+  if (typeof record.r !== 'string' || !isOpaqueToken(record.r)) return null;
   if (typeof record.x !== 'number' || typeof record.e !== 'number' || typeof record.o !== 'string') return null;
   if (!Array.isArray(record.s) || record.s.length === 0 || record.s.length > 20) return null;
   const sites = [];
@@ -133,7 +143,36 @@ function sealBody(value: unknown): SealBody | null {
     if (typeof site.url !== 'string' || typeof site.name !== 'string') return null;
     sites.push({ id: site.id.toLowerCase(), url: site.url, name: site.name });
   }
-  return { t: record.t, x: record.x, e: record.e, o: record.o, s: sites };
+  return { t: record.t, r: record.r, x: record.x, e: record.e, o: record.o, s: sites };
+}
+
+function isOpaqueToken(value: unknown): value is string {
+  return typeof value === 'string' && value.length >= 20 && value.length <= 8192 && !/[\s\u0000-\u001f\u007f]/.test(value);
+}
+
+function readTokenGrant(value: unknown): TokenGrant | null {
+  if (!value || typeof value !== 'object') return null;
+  const token = value as { access_token?: unknown; refresh_token?: unknown; expires_in?: unknown; token_type?: unknown };
+  if (!isOpaqueToken(token.access_token) || !isOpaqueToken(token.refresh_token)) return null;
+  if (token.token_type !== undefined && token.token_type !== 'Bearer') return null;
+  const expiresIn = typeof token.expires_in === 'number' && token.expires_in > 0 && token.expires_in <= 86_400 ? token.expires_in : 3600;
+  return { accessToken: token.access_token, refreshToken: token.refresh_token, expiresIn };
+}
+
+async function exchangeToken(config: OAuthConfig, body: Record<string, string>): Promise<TokenGrant | 'rejected' | 'failed'> {
+  try {
+    const tokenResponse = await fetch(TOKEN_URL, {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_id: config.clientId, client_secret: config.clientSecret, ...body }),
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (tokenResponse.status === 400 || tokenResponse.status === 401 || tokenResponse.status === 403) return 'rejected';
+    if (!tokenResponse.ok) return 'failed';
+    return readTokenGrant(await tokenResponse.json()) ?? 'failed';
+  } catch {
+    return 'failed';
+  }
 }
 
 function readCookie(header: string | null): string | null {
@@ -278,30 +317,14 @@ export async function handleAtlassianAuth(request: Request, env: Env): Promise<R
     const code = url.searchParams.get('code') ?? '';
     if (!code || code.length > 8192) return failed('exchange');
 
-    let accessToken = '';
-    let expiresIn = 0;
-    try {
-      const tokenResponse = await fetch(TOKEN_URL, {
-        method: 'POST',
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          grant_type: 'authorization_code',
-          client_id: config.clientId,
-          client_secret: config.clientSecret,
-          code,
-          redirect_uri: callbackUrl(origin),
-          code_verifier: session.v,
-        }),
-        signal: AbortSignal.timeout(15_000),
-      });
-      if (!tokenResponse.ok) return failed('exchange');
-      const token = (await tokenResponse.json()) as { access_token?: unknown; expires_in?: unknown; token_type?: unknown };
-      if (typeof token.access_token !== 'string' || token.token_type !== 'Bearer') return failed('exchange');
-      accessToken = token.access_token;
-      expiresIn = typeof token.expires_in === 'number' && token.expires_in > 0 && token.expires_in <= 86_400 ? token.expires_in : 3600;
-    } catch {
-      return failed('exchange');
-    }
+    const grant = await exchangeToken(config, {
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: callbackUrl(origin),
+      code_verifier: session.v,
+    });
+    if (grant === 'rejected' || grant === 'failed') return failed('exchange');
+    const { accessToken, refreshToken, expiresIn } = grant;
 
     let sites: { id: string; url: string; name: string }[] = [];
     try {
@@ -320,7 +343,7 @@ export async function handleAtlassianAuth(request: Request, env: Env): Promise<R
 
     const sealed = await sealJson(
       config.clientSecret,
-      { t: accessToken, x: expiresIn, e: now + HANDOFF_TTL_SECONDS, o: origin, s: sites } satisfies SealBody,
+      { t: accessToken, r: refreshToken, x: expiresIn, e: now + HANDOFF_TTL_SECONDS, o: origin, s: sites } satisfies SealBody,
       `${session.n}.${origin}`,
     );
     return page(`${origin}/oauth/callback?h=${sealed}`);
@@ -329,6 +352,44 @@ export async function handleAtlassianAuth(request: Request, env: Env): Promise<R
   const origin = request.headers.get('Origin') ?? '';
   if (!appOriginAllowed(env, origin)) return new Response(null, { status: 403 });
   const clear = cookie('', 0, secureCookie(origin));
+
+  if (url.pathname === '/auth/atlassian/refresh') {
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': origin,
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Methods': 'POST',
+          'Access-Control-Allow-Headers': 'Content-Type, Accept',
+          'Access-Control-Max-Age': '600',
+          Vary: 'Origin',
+        },
+      });
+    }
+    if (request.method !== 'POST') return new Response(null, { status: 405 });
+    let refreshToken = '';
+    try {
+      const body = (await request.json()) as { refreshToken?: unknown };
+      if (isOpaqueToken(body.refreshToken)) refreshToken = body.refreshToken;
+    } catch {
+      return jsonError(400, 'Não foi possível renovar o acesso da Atlassian.', origin);
+    }
+    if (!refreshToken) return jsonError(400, 'Não foi possível renovar o acesso da Atlassian.', origin);
+    const grant = await exchangeToken(config, { grant_type: 'refresh_token', refresh_token: refreshToken });
+    if (grant === 'rejected') return jsonError(401, 'O acesso da Atlassian expirou ou foi revogado. Entre de novo com a Atlassian.', origin);
+    if (grant === 'failed') return jsonError(502, 'Não foi possível renovar o acesso da Atlassian.', origin);
+    return new Response(JSON.stringify({ accessToken: grant.accessToken, expiresIn: grant.expiresIn, refreshToken: grant.refreshToken }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+        'Access-Control-Allow-Origin': origin,
+        'Access-Control-Allow-Credentials': 'true',
+        Vary: 'Origin',
+      },
+    });
+  }
 
   if (request.method === 'OPTIONS') {
     return new Response(null, {
@@ -352,7 +413,7 @@ export async function handleAtlassianAuth(request: Request, env: Env): Promise<R
   } catch {
     return jsonError(400, 'Não foi possível concluir o login.', origin, clear);
   }
-  if (!/^[A-Za-z0-9_-]{20,16000}$/.test(sealed)) return jsonError(400, 'Não foi possível concluir o login.', origin, clear);
+  if (!/^[A-Za-z0-9_-]{20,48000}$/.test(sealed)) return jsonError(400, 'Não foi possível concluir o login.', origin, clear);
   const session = await readPayload(config.clientSecret, COOKIE_PURPOSE, readCookie(request.headers.get('Cookie')) ?? '', cookiePayload);
   const now = Math.floor(Date.now() / 1000);
   if (!session || session.o !== origin || session.e < now) {
@@ -362,7 +423,7 @@ export async function handleAtlassianAuth(request: Request, env: Env): Promise<R
   if (!opened || opened.o !== origin || opened.e < now) {
     return jsonError(401, 'O login expirou. Entre de novo com a Atlassian.', origin, clear);
   }
-  return new Response(JSON.stringify({ accessToken: opened.t, expiresIn: opened.x, sites: opened.s.map((site) => ({ cloudId: site.id, url: site.url, name: site.name })) }), {
+  return new Response(JSON.stringify({ accessToken: opened.t, refreshToken: opened.r, expiresIn: opened.x, sites: opened.s.map((site) => ({ cloudId: site.id, url: site.url, name: site.name })) }), {
     status: 200,
     headers: {
       'Content-Type': 'application/json',

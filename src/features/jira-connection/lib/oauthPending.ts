@@ -16,6 +16,7 @@ export interface OAuthPending {
   accountId: string;
   displayName: string;
   sites: OAuthSite[];
+  refreshToken?: string;
 }
 
 export async function saveOAuthPending(pending: OAuthPending): Promise<void> {
@@ -25,7 +26,11 @@ export async function saveOAuthPending(pending: OAuthPending): Promise<void> {
 export async function loadOAuthPending(): Promise<OAuthPending | null> {
   const pending = await loadEncrypted<OAuthPending>(OAUTH_PENDING_RECORD);
   if (!pending || typeof pending.accessToken !== 'string' || !Array.isArray(pending.sites) || pending.sites.length === 0) return null;
-  if (typeof pending.expiresAt !== 'number' || pending.expiresAt <= Date.now()) {
+  if (typeof pending.expiresAt !== 'number') {
+    await deleteEncrypted(OAUTH_PENDING_RECORD);
+    return null;
+  }
+  if (pending.expiresAt <= Date.now() && (typeof pending.refreshToken !== 'string' || pending.refreshToken.length < 20)) {
     await deleteEncrypted(OAUTH_PENDING_RECORD);
     return null;
   }

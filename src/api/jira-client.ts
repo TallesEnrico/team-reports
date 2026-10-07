@@ -1,3 +1,4 @@
+import { ensureAtlassianAccess } from '@/features/jira-connection/lib/refreshAtlassianAccess';
 import { type JiraCredentials, useJiraConnectionStore } from '../store/useJiraConnectionStore';
 import { JIRA_CLOUD_ID, JIRA_SITE_URL, JIRA_WRITE_PROXY_URL, jiraApiBaseUrl } from './jira-config';
 import { pendingJiraWriteDone, rememberPendingJiraWrite, takePendingJiraWrites } from './pendingJiraWrite';
@@ -6,7 +7,7 @@ import { pendingJiraWriteDone, rememberPendingJiraWrite, takePendingJiraWrites }
 // jira-config.ts), autenticando com a conta conectada, cifrada no IndexedDB.
 // Só os POST vão pelo proxy de escritas, quando configurado.
 
-export type JiraAuth = Pick<JiraCredentials, 'email' | 'token' | 'authMethod' | 'expiresAt'>;
+export type JiraAuth = Pick<JiraCredentials, 'email' | 'token' | 'authMethod' | 'expiresAt' | 'refreshToken'>;
 
 type QueryParams = Record<string, string | number | boolean | undefined>;
 
@@ -225,21 +226,27 @@ function rememberWrite(path: string, options: JiraRequestOptions): void {
   rememberPendingJiraWrite({ method, path, data: options.data, params: options.params });
 }
 
-export async function requestJira<T>(path: string, options: JiraRequestOptions = {}): Promise<T> {
+export function requestJira<T>(path: string, options: JiraRequestOptions = {}): Promise<T> {
+  return requestJiraOnce(path, options, false);
+}
+
+async function requestJiraOnce<T>(path: string, options: JiraRequestOptions, retried: boolean): Promise<T> {
   const { method = 'GET', data, params, signal } = options;
   const connection = useJiraConnectionStore.getState();
-  const auth = options.auth ?? connection.credentials;
+  let auth = options.auth ?? connection.credentials;
   if (!auth) throw new JiraApiError(401, ['Conecte sua conta do Jira para continuar.'], []);
-  if (auth.authMethod === 'oauth' && typeof auth.expiresAt === 'number' && auth.expiresAt <= Date.now()) {
-    if (!options.auth) {
+  if (!options.auth && auth.authMethod === 'oauth') {
+    const outcome = await ensureAtlassianAccess();
+    if (outcome === 'rejected') {
       rememberWrite(path, options);
       connection.markTokenRejected();
+      throw new JiraApiError(401, [OAUTH_REJECTED_MESSAGE], [], 'token-rejected');
     }
-    throw new JiraApiError(401, [OAUTH_REJECTED_MESSAGE], [], 'token-rejected');
-  }
-  if (auth.authMethod === 'oauth' && auth.expiresAt == null && !options.auth) {
-    rememberWrite(path, options);
-    connection.markTokenRejected();
+    auth = useJiraConnectionStore.getState().credentials ?? auth;
+    if (outcome === 'unavailable' && !(typeof auth.expiresAt === 'number' && auth.expiresAt > Date.now())) {
+      throw new JiraApiError(0, ['Não foi possível renovar o acesso da Atlassian. Verifique sua conexão com a internet.'], []);
+    }
+  } else if (auth.authMethod === 'oauth' && (auth.expiresAt == null || auth.expiresAt <= Date.now())) {
     throw new JiraApiError(401, [OAUTH_REJECTED_MESSAGE], [], 'token-rejected');
   }
 
@@ -279,8 +286,23 @@ export async function requestJira<T>(path: string, options: JiraRequestOptions =
     // Com a conta conectada (não o assistente), um 401 pede a conferência do token.
     let tokenAlive: boolean | null | undefined;
     if (response.status === 401 && !options.auth) {
+      const stored = useJiraConnectionStore.getState().credentials;
       tokenAlive =
         connection.tokenRejected || path.replace(/^\//, '') === 'rest/api/3/myself' ? false : await checkTokenAlive(auth, cloudId);
+      if (
+        tokenAlive === false &&
+        !retried &&
+        stored?.authMethod === 'oauth' &&
+        stored.refreshToken &&
+        stored.token === auth.token
+      ) {
+        const outcome = await ensureAtlassianAccess(auth.token);
+        const next = useJiraConnectionStore.getState().credentials;
+        if (outcome === 'ready' && next && next.token !== auth.token) return requestJiraOnce(path, options, true);
+        if (outcome === 'unavailable') {
+          throw new JiraApiError(0, ['Não foi possível renovar o acesso da Atlassian. Verifique sua conexão com a internet.'], details);
+        }
+      }
       if (tokenAlive === false) {
         rememberWrite(path, options);
         useJiraConnectionStore.getState().markTokenRejected();

@@ -21,6 +21,8 @@ export interface JiraCredentials {
   authMethod?: JiraAuthMethod;
   /** Epoch ms em que o access token OAuth expira. */
   expiresAt?: number;
+  /** Refresh token OAuth. Ausente nas contas que entraram antes da renovação. */
+  refreshToken?: string;
 }
 
 type ConnectionStatus = 'loading' | 'disconnected' | 'connected';
@@ -47,6 +49,8 @@ interface JiraConnectionState {
   connect: (credentials: JiraCredentials) => Promise<void>;
   /** Troca a squad da conta (Configurações > Meu cliente), com o mesmo e-mail e token. */
   changeSquad: (squad: string) => Promise<void>;
+  /** Grava o par novo do OAuth no lugar do access token que está expirando. */
+  replaceOAuthTokens: (tokens: { token: string; refreshToken: string; expiresAt: number }) => Promise<void>;
   disconnect: () => Promise<void>;
 }
 
@@ -57,6 +61,13 @@ function readCredentials(value: unknown): JiraCredentials | null {
   if (typeof record?.email !== 'string' || typeof record.token !== 'string' || typeof record.squad !== 'string') return null;
   const authMethod = record.authMethod === 'oauth' || record.authMethod === 'basic' ? record.authMethod : undefined;
   const expiresAt = typeof record.expiresAt === 'number' ? record.expiresAt : undefined;
+  const refreshToken =
+    authMethod === 'oauth' &&
+    typeof record.refreshToken === 'string' &&
+    record.refreshToken.length >= 20 &&
+    record.refreshToken.length <= 8192
+      ? record.refreshToken
+      : undefined;
   return {
     email: record.email,
     token: record.token,
@@ -65,11 +76,19 @@ function readCredentials(value: unknown): JiraCredentials | null {
     domain: typeof record.domain === 'string' && record.domain ? record.domain : JIRA_SITE_DOMAIN,
     authMethod,
     expiresAt,
+    refreshToken,
   };
 }
 
-function oauthExpired(credentials: JiraCredentials): boolean {
-  return credentials.authMethod === 'oauth' && (!credentials.expiresAt || credentials.expiresAt <= Date.now());
+function oauthUnrecoverable(credentials: JiraCredentials): boolean {
+  if (credentials.authMethod !== 'oauth') return false;
+  const accessUsable = typeof credentials.expiresAt === 'number' && credentials.expiresAt > Date.now();
+  if (accessUsable) return false;
+  return !credentials.refreshToken;
+}
+
+export async function readStoredJiraCredentials(): Promise<JiraCredentials | null> {
+  return readCredentials(await loadEncrypted<unknown>(RECORD_ID));
 }
 
 /**
@@ -93,13 +112,20 @@ export const useJiraConnectionStore = create<JiraConnectionState>()((set, get) =
     set({
       credentials,
       status: credentials ? 'connected' : 'disconnected',
-      tokenRejected: credentials ? oauthExpired(credentials) : false,
+      tokenRejected: credentials ? oauthUnrecoverable(credentials) : false,
     });
   },
   connect: async (credentials) => {
     await saveEncrypted(RECORD_ID, credentials);
     await clearOAuthPending();
-    set({ credentials, status: 'connected', tokenRejected: oauthExpired(credentials), rejectionDismissed: false, isReconnecting: false });
+    set({ credentials, status: 'connected', tokenRejected: oauthUnrecoverable(credentials), rejectionDismissed: false, isReconnecting: false });
+  },
+  replaceOAuthTokens: async ({ token, refreshToken, expiresAt }) => {
+    const { credentials } = get();
+    if (!credentials || credentials.authMethod !== 'oauth') return;
+    const next = { ...credentials, token, refreshToken, expiresAt };
+    await saveEncrypted(RECORD_ID, next);
+    set({ credentials: next, tokenRejected: false, rejectionDismissed: false });
   },
   changeSquad: async (squad) => {
     const { credentials } = get();

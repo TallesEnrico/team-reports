@@ -6,6 +6,7 @@ import { BuilderPageFallback } from './features/builder/components/BuilderPageFa
 import { HomePage } from './features/home/components/HomePage';
 import { ConnectionWizard } from './features/jira-connection/components/ConnectionWizard';
 import { acceptAtlassianLogin, captureOAuthReturn, oauthErrorMessage } from './features/jira-connection/lib/atlassianOAuth';
+import { watchAtlassianAccess } from './features/jira-connection/lib/refreshAtlassianAccess';
 import { forgetSiteDomainHint } from './features/jira-connection/lib/siteHint';
 import { ResumeNotice } from './features/jira-connection/components/ResumeNotice';
 import { TokenRejectedDialog } from './features/jira-connection/components/TokenRejectedDialog';
@@ -97,6 +98,11 @@ export function App() {
   useEffect(() => {
     if (connectionStatus === 'connected') forgetSiteDomainHint();
   }, [connectionStatus]);
+
+  useEffect(() => {
+    if (connectionStatus !== 'connected') return;
+    return watchAtlassianAccess();
+  }, [connectionStatus, credentials?.expiresAt, credentials?.refreshToken]);
 
   // A chave da OpenRouter (a IA do Dashboard), também cifrada no IndexedDB.
   const loadOpenRouter = useOpenRouterStore((state) => state.load);

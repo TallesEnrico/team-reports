@@ -3,6 +3,7 @@ import { fetchSquads } from '@/features/jira-connection/api/connection-api';
 import { normalizeJiraDomain } from '@/features/jira-connection/lib/validateJiraSite';
 import { useJiraConnectionStore, type JiraCredentials } from '@/store/useJiraConnectionStore';
 import { saveOAuthPending, type OAuthSite } from '@/features/jira-connection/lib/oauthPending';
+import { oauthExpiresAt } from '@/features/jira-connection/lib/refreshAtlassianAccess';
 
 export const ATLASSIAN_LOGIN_PATH = '/auth/atlassian/start';
 
@@ -19,6 +20,7 @@ export type OAuthReturn = { kind: 'sealed'; sealed: string } | { kind: 'error'; 
 
 interface OAuthGrant {
   accessToken: string;
+  refreshToken: string;
   expiresIn: number;
   sites: OAuthSite[];
 }
@@ -71,7 +73,7 @@ function takeOAuthReturn(location: Location, history: History): OAuthReturn | nu
   const sealed = params.get('h');
   const error = params.get('error');
   history.replaceState(history.state, '', '/');
-  if (sealed && /^[A-Za-z0-9_-]{20,16000}$/.test(sealed)) return { kind: 'sealed', sealed };
+  if (sealed && /^[A-Za-z0-9_-]{20,48000}$/.test(sealed)) return { kind: 'sealed', sealed };
   if (error && error in OAUTH_ERROR_MESSAGES) return { kind: 'error', code: error };
   return { kind: 'error', code: 'exchange' };
 }
@@ -103,8 +105,13 @@ async function redeemAtlassianHandoff(sealed: string): Promise<OAuthGrant> {
     }
     throw new Error(message);
   }
-  const body = (await response.json()) as { accessToken?: unknown; expiresIn?: unknown; sites?: unknown };
-  if (typeof body.accessToken !== 'string' || typeof body.expiresIn !== 'number' || !Array.isArray(body.sites)) {
+  const body = (await response.json()) as { accessToken?: unknown; refreshToken?: unknown; expiresIn?: unknown; sites?: unknown };
+  if (
+    typeof body.accessToken !== 'string' ||
+    typeof body.refreshToken !== 'string' ||
+    typeof body.expiresIn !== 'number' ||
+    !Array.isArray(body.sites)
+  ) {
     throw new Error('A Atlassian não devolveu o acesso do Jira.');
   }
   const sites: OAuthSite[] = [];
@@ -117,7 +124,7 @@ async function redeemAtlassianHandoff(sealed: string): Promise<OAuthGrant> {
     sites.push({ cloudId: site.cloudId, url: site.url, name: site.name, domain });
   }
   if (sites.length === 0) throw new Error('Nenhum site do Jira foi autorizado para o Team Reportss.');
-  return { accessToken: body.accessToken, expiresIn: body.expiresIn, sites };
+  return { accessToken: body.accessToken, refreshToken: body.refreshToken, expiresIn: body.expiresIn, sites };
 }
 
 async function acceptOnce(sealed: string): Promise<void> {
@@ -125,7 +132,7 @@ async function acceptOnce(sealed: string): Promise<void> {
   const existing = useJiraConnectionStore.getState().credentials;
   const site = grant.sites.find((item) => item.cloudId === existing?.cloudId) ?? grant.sites[0];
   if (!site) throw new Error('Nenhum site do Jira foi autorizado para o Team Reportss.');
-  const expiresAt = Date.now() + grant.expiresIn * 1000 - 30_000;
+  const expiresAt = oauthExpiresAt(grant.expiresIn);
   const auth = { email: existing?.email || 'oauth', token: grant.accessToken, authMethod: 'oauth' as const, expiresAt };
   let email = existing?.email || '';
   let accountId = email;
@@ -152,6 +159,7 @@ async function acceptOnce(sealed: string): Promise<void> {
     domain: site.domain,
     authMethod: 'oauth',
     expiresAt,
+    refreshToken: grant.refreshToken,
   });
   if (existing?.squad) {
     await useJiraConnectionStore.getState().connect(connection(existing.squad));
@@ -164,10 +172,26 @@ async function acceptOnce(sealed: string): Promise<void> {
       return;
     }
   } catch {
-    await saveOAuthPending({ accessToken: grant.accessToken, expiresAt, email, accountId, displayName, sites: grant.sites });
+    await saveOAuthPending({
+      accessToken: grant.accessToken,
+      refreshToken: grant.refreshToken,
+      expiresAt,
+      email,
+      accountId,
+      displayName,
+      sites: grant.sites,
+    });
     return;
   }
-  await saveOAuthPending({ accessToken: grant.accessToken, expiresAt, email, accountId, displayName, sites: grant.sites });
+  await saveOAuthPending({
+    accessToken: grant.accessToken,
+    refreshToken: grant.refreshToken,
+    expiresAt,
+    email,
+    accountId,
+    displayName,
+    sites: grant.sites,
+  });
 }
 
 export function acceptAtlassianLogin(sealed: string): Promise<void> {
